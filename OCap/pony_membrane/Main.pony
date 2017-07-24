@@ -37,7 +37,7 @@ actor Main
         bob.sendProp("carol_prop1","false","carol-M") //bob tries to change prop1 = false to carol-M
         env.out.print("MAIN:carol_prop1 is "+carol.getProp("carol_prop1")) //this carol's prop1 should return true
         //Bob tries to change prop1=false on diane and will fail because membrane will stop this
-        bob.sendProp("diane_prop1","false","diane") //bob tries to change prop1 = false to diane
+        bob.sendProp("diane_prop1","false","diane-M") //bob tries to change prop1 = false to diane
         env.out.print("MAIN:diane_prop1 is "+diane.getProp("diane_prop1")) //because membrane is locked, should return true
 
         end
