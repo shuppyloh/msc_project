@@ -1,0 +1,390 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Journal Article
+% LaTeX Template
+% Version 1.4 (15/5/16)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com) with extensive modifications by
+% Vel (vel@LaTeXTemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+\documentclass[a4paper,11pt, twoside,twocolumn]{article}
+\usepackage{blindtext} % Package to generate dummy text throughout this template 
+
+\usepackage[sc]{mathpazo} % Use the Palatino font
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\linespread{1.05} % Line spacing - Palatino needs more space between lines
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+
+\usepackage[english]{babel} % Language hyphenation and typographical rules
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage[left=2.5cm,right=2cm,top=2cm,bottom=2cm, hmarginratio=1:1,headheight=14pt,columnsep=15pt]{geometry} % Document margins
+\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption} % Custom captions under/above floats in tables or figures
+\usepackage{booktabs} % Horizontal rules in tables
+\usepackage{graphicx}
+\usepackage{enumitem} % Customized lists
+\setlist[itemize]{noitemsep} % Make itemize lists more compact
+
+\usepackage{abstract} % Allows abstract customization
+\renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
+\renewcommand{\abstracttextfont}{\normalfont\small} % Set the abstract itself to small italic text
+
+\usepackage{fancyhdr} % Headers and footers
+\pagestyle{fancy} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+%\fancyhead[C]{Running title $\bullet$ May 2016 $\bullet$ Vol. XXI, No. 1} % Custom header text
+\fancyfoot[RO,LE]{\thepage} % Custom footer text
+
+\usepackage{titling} % Customizing the title section
+\usepackage{titlesec}
+\titleformat{name=\section}{\flushleft\bf\scshape\Large}{\thesection}{.5em}{}
+\titleformat{name=\subsection}{\flushleft\bf\scshape\large}{\thesubsection}{.5em}{}
+\titleformat{name=\subsubsection}{\flushleft\bf\scshape\normalsize}{\thesubsubsection}{.5em}{}
+
+\usepackage{hyperref} % For hyperlinks in the PDF
+\usepackage{amsfonts} % For more logic symbols
+\usepackage{amssymb} % For more logic symbols
+\usepackage[fleqn]{amsmath} % left aligned math
+\usepackage{centernot} % to use not implies
+\usepackage{array}
+\usepackage{upgreek}
+\setlength\parindent{0pt}
+
+%----------------------------------------------------------------------------------------
+%	Custom Logic Environment and  Bindings
+%----------------------------------------------------------------------------------------
+%eq numbering
+\makeatletter
+\newcommand{\eqnum}[1][]{\leavevmode\hfill\refstepcounter{equation}\label{#1}\textup{\tagform@{\theequation}}}
+\makeatother
+%environment formating
+\newenvironment{logic}[1][null]
+{\begin{flushleft} \small \label{#1}}
+{\end{flushleft}}
+%logic shortcuts
+\newcommand*\rot{\rotatebox{90}}
+\newcommand{\loin}{$\in$}
+\newcommand{\loforall}{$\forall$}
+\newcommand{\loexists}{$\exists$}
+\newcommand{\loand}{$\land$}
+\newcommand{\loor} {$\lor$}
+\newcommand{\loneq} {$\neq$}
+\newcommand{\losubseteq}{$\subseteq$}
+\newcommand{\loimplies}{$\implies$}
+\newcommand{\lonimplies}{$\centernot\implies$}
+\newcommand{\loimpliedby}{$\Longleftarrow$}
+\newcommand{\lonimpliedby}{$\centernot\Longleftarrow$}
+\newcommand{\losigma}{$\upsigma$}
+\newcommand{\loturns} {$\vDash$}
+\newcommand{\lochi}{$\upchi$}
+\newcommand{\lophi}{$\upvarphi$}
+\newcommand{\lorarrow}{$\rightarrow$}
+\newcommand{\lonturns} {$\nvDash$}
+\newcommand{\loiff} {$\iff$}
+\newcommand{\loleadsto} {$\leadsto$}
+\newcommand{\lomapsto} {$\mapsto$}
+\newcommand{\locup} {$\cup$}
+\newcommand{\lobigcup} {$\bigcup$}
+\newcommand{\lotimes} {$\times$}
+\newcommand{\loneg}{$\neg$}
+\newcommand{\loexec}[2] {$\lfloor$#1$\rfloor _{\text{#2}}$}
+\newcommand{\loconj}[1] {$\bar{\text{#1}}$}
+\newcommand{\ablock} {\null\qquad}
+%-----------------------
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+\setlength{\droptitle}{-4\baselineskip} % Move the title up
+
+\pretitle{\begin{center}\Huge\bfseries} % Article title formatting
+\posttitle{\end{center}} % Article title closing formatting
+\title{Object Capability Patterns:\\Policies and Specifications} % Article title
+\author{%
+\textsc{Shu-Peng Loh} \\[1ex] % Your name
+\normalsize Imperial College London \\ % Your institution
+\normalsize \href{mailto:shu.loh16@imperial.ac.uk}{shu.loh16@imperial.ac.uk} % Your email address
+\and % if 2 authors are required, duplicate these 4 lines if more
+\textsc{Sophia Drossopoulou}\\[1ex] % Second author's name
+\normalsize Imperial College London \\ % Second author's institution
+\normalsize \href{mailto:s.drossopoulou@imperial.ac.uk}{s.drossopoulou@imperial.ac.uk} % Second author's email address
+}
+\date{} % Leave empty to omit a date
+
+
+\renewcommand{\maketitlehookd}{%
+\begin{abstract}
+\noindent  We propose a set of first-order logic predicates to formally specify object-to-object interactions which can then be used to describe a set of policies in an object-oriented computational model. Using these predicates, we attempt to formally specify the policies of well-established Object-Capability (OCap) patterns within the OCap literature which we have implemented in the capability-safe language Pony. We also offer some preliminary insights on how such specifications can be used in the context of a non-Ocap model by describing the security properties of a pattern built on the Ethereum smart contract programming language Solidity, which we argue implements a form of stack-based access control.\end{abstract}
+}
+\begin{document}
+\renewcommand{\ref}[1]{\textit{\autoref{#1}}}
+% Print the title
+\maketitle
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+
+\section{Introduction}
+Recent widespread adoption of distributed ledger technology (blockchain) has created multiple decentralized, distributed computational platforms where millions of dollars are transacted over codified constructs called smart contracts\footnote{For example, as of 10 Aug 2017, Ethereum is a US\$28 billion blockchain platform with an in-built Turing-complete programming language that can be used to create and deploy such contracts.}.
+The power of distributed modern computing hence lies in facilitating cooperation between multiple agents, but it comes with risk as an agent is vulnerable to \textit{unexpected} outcomes\footnote{Representing in general any outcome arising from a piece of code execution that has deviated from an agent's original intention or objective independent from code.} from participating in these smart contracts. This might generally arise from two issues: 
+\begin{itemize}
+\item oversight or misconception of the outcomes of executing a piece of \textit{known} code
+\item failure to defend against malicious execution of \textit{unknown} code components\end{itemize}
+\noindent These two issue are often closely intertwined in any system of execution that has both trusted and untrusted code components (the second issue is often a result of the first).
+
+In recent years the Object-Capability (OCap) model has received increasing attention as a compelling approach to building robust, distributed systems that promote what Miller\cite{miller2006} calls \textit{cooperation without vulnerability}. The OCap model attemps to address these two issues by alleviating security as a separate concern from the mind of the programmer, by leveraging the object-oriented programming paradigm and imposing certain prohibitions.
+%----------------------------------------------------------------------------------------
+%   OCap Model
+%----------------------------------------------------------------------------------------
+\section{OCap Model}
+The OCap model uses the reference graph of the objects as the access graph, and strictly requires objects to interact with each other only by sending messages on object references\cite{miller2003b}.
+\subsection{From Capability to Object-Capability}
+\subsection{OCap Languages}
+\begin{itemize}
+\item Joe-E (inspired by Java)
+\item Emily (inspired by OCaml)
+\item Caja (inspired by JavaScript)
+\item E
+\item Pony
+\end{itemize}
+\subsubsection{Language Restrictions}
+\subsection{OCap Patterns}
+An OCap pattern is a concrete representation of the OCap model and comprises a set of objects connected to each other by capabilities. Objects interact with each other by sending messages on capabilities. An OCap pattern may be visualised as a directed graph---nodes represent objects, and each edge from an object \textit{o} to another \textit{o'} represents \textit{o} holding a capability that allows it to directly access \textit{o'}.
+%----------------------------------------------------------------------------------------
+%   Formal Specifications
+%----------------------------------------------------------------------------------------
+\section{Formal specifications}
+\subsection{Definitions}\noindent
+Here, we borrow liberally the definitions of runtime state, module and arising configurations from the appendix of \cite{drossopoulou2015b}.\\
+\textbf{Runtime state:}
+ \losigma\ consists of a stack frame \lophi, and a heap \lochi. A stack frame is a mapping from receiver (this) to its address, and from the local variables (VarId) and parameters (ParId) to their values. Values are integers, the booleans true or false, addresses, or null. The heap maps addresses to objects. Objects are tuples consisting of the class of the object, and a mapping from field identifiers onto values.
+\begin{logic}[Runtime state]
+\losigma\ \loin\ state = frame \lotimes\ heap \\
+\lophi \loin\ frame = StackId $\rightarrow$ val \\
+\lochi \loin\ heap = addr $\rightarrow$ object \\
+v \loin\ val = \{\texttt{null}, \texttt{true}, \texttt{false}\} \locup\ \textit{addr} \locup\ $\mathbb{N}$ \\
+StackId = \{\textit{this}\} \locup\ VarId \locup\ ParId \\
+object = ClassId \lotimes (FieldId $\rightarrow$ val)
+\end{logic}
+\textbf{Module:}
+\begin{logic}[Module]
+M \loin\ Module = ClassId \locup\ SpecId\linebreak\ablock\qquad\qquad\quad $\rightarrow$ \linebreak
+\ablock \qquad \qquad \quad (ClassDescr \locup\ Specification)
+\end{logic}
+
+\textbf{Reach and Execution:}\\
+\begin{logic}[Reach and Execution]\end{logic}
+
+
+
+\textbf{Arising Configurations}\\
+\begin{logic}[Arising]\end{logic}
+
+
+
+\textbf{Domination:}\\
+\begin{logic}[Domination]\end{logic}
+
+
+
+\subsubsection{MayAccess Definitions}
+\begin{logic}[MayAccessDirNow]
+\loforall M,\losigma,x,e. M,\losigma\ \loturns\ MayAccess$^{Dir,Now}$(x,e) \loiff \linebreak
+\ablock \loexists f. \loexec{x.f}{\losigma} = \loexec{e}{\losigma}
+\loor \linebreak
+\ablock (\losigma(this) = \loexec{x}{\losigma} \loand\ \loexists y. \losigma(y) = \loexec{e}{\losigma})
+\end{logic}
+\begin{logic}[MayAccessDirEve]
+\loforall M,\losigma,x,e. M,\losigma\ \loturns\ MayAccess$^{Dir,Eve}$(x,e) \loiff \linebreak
+\ablock \loexists \losigma' \loin Arising(M,\losigma).\linebreak
+\ablock M,\losigma'\ \loturns\ MayAccess$^{Dir,Now}$(x,e) 
+\end{logic}
+\begin{logic}[MayAccessIndNow]
+\loforall M,\losigma,x,e. M,\losigma\ \loturns\ MayAccess$^{Ind,Now}$(x,e) \loiff \linebreak
+\ablock \loexists \loconj{f}. \loexec{x.\loconj{f}}{\losigma} = \loexec{e}{\losigma}
+\loor \linebreak
+\ablock (\losigma(this) = \loexec{x}{\losigma} \loand\ \loexists y. \losigma(y.\loconj{f}) = \loexec{e}{\losigma})
+\end{logic}
+\begin{logic}[MayAccessIndEve]
+\loforall M,\losigma,x,e. M,\losigma\ \loturns\ MayAccess$^{Ind,Eve}$(x,e) \loiff \linebreak
+\ablock \loexists \losigma' \loin Arising(M,\losigma).\linebreak
+\ablock M,\losigma'\ \loturns\ MayAccess$^{Ind,Now}$(x,e) 
+\end{logic}
+A note on \textit{f} and \textit{\loconj{f}}\ : While f can considered as an object field, it can also represent an object method that returns a val.
+Similarly \loconj{f} can be considered a series of fields, or methods that return a val, or a combination of both.\\
+
+Note that we define MayAccess$^{Ind,*}$(x,e) to mean a form of weak access---that a path exists from x to some well-formed e, but it does \textit{not} imply that such a path is navigateable by x. Take the following example where at a particular state, x1.next points to x2, and x2.next points to x3. MayAccess$^{Ind,*}$(x1,x3) holds, regardless of whether x2.next is navigateable by x1. If x2.next is a private method that can only be called internally by x2, the predicate still holds---we say that a path from x1 to x3 exists, but is not navigateable by x1.\\ \\
+On the other hand, we define MayAccess$^{Dir,*}$(x,e) to mean a form of strong access---it implies that a patch exists from x0 to e and that such a path \textit{is} navigateable. This is because the reference to e exists within x0's state and can be used by x0. Notice how this differs from the previous example, where x1 cannot guarantee that it can execute x2.next, because it is possible that x2.next is protected by x2 through encapsulation and data-hiding. 
+
+\subsubsection{MayAffect Definitions}
+\begin{logic}[MayAffectNow]
+\loforall M,\losigma,x,e. M,\losigma\ \loturns\ MayAffect$^{Now}$(x,e) \loiff \linebreak
+\ablock \loexists \loconj{m},\loconj{a},\losigma'. x.\loconj{m}(\loconj{a}) \loleadsto\ \losigma' \loand \loexec{e}{\losigma} \loneq \loexec{e}{\losigma'}
+\end{logic}
+\begin{logic}[MayAffectEve]
+\loforall M,\losigma,x,e. M,\losigma\ \loturns\ MayAffect$^{Eve}$(x,e) \loiff \linebreak
+\ablock \loexists \losigma \loin Arising(M,\losigma).\linebreak
+\ablock \loexists \loconj{m},\loconj{a},\losigma'. x.\loconj{m}(\loconj{a}) \loleadsto\ \losigma' \loand \loexec{e}{\losigma} \loneq \loexec{e}{\losigma'}
+\end{logic}
+\begin{logic}[AffectObject]
+\textit{If e is an object:} \\
+\loforall\losigma,\losigma', e\loin Object. \loexec{e}{\losigma} \loneq \loexec{e}{\losigma'} \loiff \linebreak
+\ablock \loexists f. \loexec{e.f}{\losigma} \loneq \loexec{e.f}{\losigma'}
+\end{logic}
+
+
+
+\subsection{Implications}
+
+\subsubsection{Imposing OCap rules}
+We assume \loforall \{o,o'\}\loin Object.\\
+\begin{table}[hbtp]
+\small
+\caption{MayAccess(o,o') Relations in OCap}
+\centering
+\begin{tabular*}{\linewidth}{c|ccc}\toprule
+& \bf Now & & \bf Eventually\\
+\hline
+\multirow{5}{*}{\rot{\bf Indirect \enspace Direct \:}} & \multirow{2}{*}{MayAccess$^{Dir,Now}$} & \loimplies & \multirow{2}{*}{MayAccess$^{Dir, Eve}$} \\
+& & \lonimpliedby &  \\
+& \rot{\loimpliedby} \rot{\lonimplies}& &\rot{\loimpliedby} \rot{\lonimplies} \\
+& \multirow{2}{*}{MayAccess$^{Ind,Now}$} & \loimplies & \multirow{2}{*}{MayAccess$^{Ind, Eve}$} \\
+& & \lonimpliedby &  \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\begin{table}[hbtp]
+\caption{MayAffect(o,o') Relations in OCap}
+\centering
+\begin{tabular*}{\linewidth}{ccc}\toprule
+\multirow{2}{*}{MayAffect$^{Now}$} & \loimplies & \multirow{2}{*}{MayAffect$^{Eve}$} \\
+& \lonimpliedby &  \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\begin{logic}
+\textbf{Results from Contraposition:}\\
+\loneg MayAccess$^{Dir,Eve}$(o,o')\loimplies \linebreak
+\ablock\loneg MayAccess$^{Dir,Now}$(o,o') \\
+
+\loneg MayAccess$^{Ind,Eve}$(o,o')\loimplies \linebreak
+\ablock\loneg MayAccess$^{Ind,Now}$(o,o') \\
+
+\loneg MayAccess$^{Ind,Now}$(o,o')\loimplies \linebreak
+\ablock\loneg MayAccess$^{Dir,Now}$(o,o') \\
+
+\loneg MayAccess$^{Ind,Eve}$(o,o')\loimplies \linebreak
+\ablock\loneg MayAccess$^{Dir,Eve}$(o,o')
+\end{logic}
+
+
+
+\textbf{Rule: Objects can only interact with each other through sending messages on capabilities.} Therefore, if an object o can affect o', then there must be a path from o to o':
+\begin{logic}[Implication 1]
+M,\losigma\ \loturns\ MayAffect$^{Eve}$(o,o') \loimplies\linebreak
+	\ablock MayAccess$^{Ind,Eve}$(o,o') \eqnum[1]
+\end{logic}
+\begin{logic}[Implication 2]
+\textit{By contraposition,}\linebreak
+M,\losigma\ \loturns\ \loneg MayAccess$^{Ind,Eve}$(o,o') \loimplies\linebreak
+	\ablock \loneg MayAffect$^{Eve}$(o,o') \eqnum[2]
+\end{logic}
+Here, we immediately see a first defensive outcome of the OCap model. Isolation of object o' from o guarantees that the state of object o' cannot be modified by object o.\\
+
+\textbf{Rule: Objects cannot forge capabilities, and only connectivity begets connectivity.}
+Therefore, if an object o' exists in a state \losigma\ and there are no possible paths from o to o' in that state, then it is not possible in any arising state \losigma' from \losigma\ where there is a path from o to o':
+\begin{logic}[Implication 3]
+M,\losigma\ \loturns\ \loneg MayAccess$^{Ind,Now}$(o,o') \loand\ Exists(o')$_{\text{\losigma}}$ \loimplies \linebreak
+\ablock \loneg MayAccess$^{Ind,Eve}$(o,o')\eqnum[3]
+\end{logic}
+We require the enforcement of o' to exist in \losigma\ because o' can refer to an object that does not exist in \losigma\ but will be created and exist in some arising \losigma' from \losigma.
+From \ref{3} and \ref{2}, to protect o' from o in all states arising from a state \losigma, we only need to ensure isolation of o' at \losigma\ :
+\begin{logic}[Implication 4]
+M,\losigma\ \loturns\ \loneg MayAccess$^{Ind,Now}$(o,o') \loand\ Exists(o')$_\text{\losigma}$ \loimplies \linebreak
+	\ablock\loneg MayAffect$^{Eve}(o,o')$\eqnum[4]
+\end{logic}
+
+So far these results only serve as a base case, because the protection of an object's state requires the impractical configuration that objects are completely isolated from each other on the reference graph. Cooperation between objects imply that there needs to be some path established between the objects for interaction to take place and therefore the predicate \loneg MayAccess$^{Ind,Now}$(o,o') rarely holds in a system of cooperation.\\
+
+The power of OCap patterns hence lies in providing concrete examples of a system of cooperation that allows the existence of paths between objects for cooperation while still dictating the degree of control of one object can have over another. For example, we can have variations of following configurations in an Ocap pattern:
+\begin{itemize}\raggedright \small
+\item M,\losigma\ \loturns\ MayAccess$^{Ind,Now}$(o,o') \loand\ Exists(o')$_\text{\losigma}$
+\loimplies \loneg MayAffect$^{Eve}(o,o')$
+\item M,\losigma\ \loturns\ MayAccess$^{Ind,Eve}$(o,o') \linebreak 
+\loimplies \loneg MayAffect$^{Eve}(o,o')$
+\end{itemize}
+
+Notice how we have also also focused on the predicate MayAffect$^{Eve}$ rather than MayAffect$^{Now}$. Security concerns are often a question of whether what one object can do to another object's in any eventual state of a system. If we are concerned with the protection of o' from o, it is not very useful to have a policy where \loneg MayAffect$^{Now}$(o,o') holds while \loneg MayAffect$^{Eve}$(o,o') does not. Furthermore, by ensuring \loneg MayAffect$^{Eve}$ holds, we can also ensure \loneg MayAffect$^{Now}$ holds since, by contraposition, \loneg MayAffect$^{Eve}$ \loimplies \loneg MayAffect$^{Now}$.
+\subsection{Pattern 1: The JavaScript DOM Tree}
+We define the following variables throughout our pattern:
+\begin{itemize}
+\item o,o' \loin Object
+\item Node,ReNode \losubseteq Object
+\item n,n' \loin Node
+\item rn,rn' \loin ReNode
+\end{itemize}
+\textbf{Vulnerability of a Node}:
+The vulnerability of a node lies in the fact that its fields and methods are defined as public. Therefore, any object that has a path and can navigate a path to a node may change the state of a node.
+
+\begin{logic}[DomP1]
+\loforall o, n. MayAccess$^{Dir,Eve}$(o,n)\linebreak \ablock\ablock \loimplies \linebreak
+\ablock \ablock MayAffect$^{Eve}$(o,n)\linebreak
+\end{logic}
+\textsc{Policy 1: Necessary Condition}
+\begin{logic}[NodeP1]
+\loforall n,o, RN\losubseteq ReNode.\linebreak
+Dom(RN,n) \loand\ MayAffect$^{Eve}$(o,n)\linebreak \ablock\loimplies \linebreak
+\ablock \loexists rn\loin RN. MayAccess$^{Ind,Eve}$(o,rn)\linebreak
+\ablock \ablock \ablock\loand\ MayAccess$^{Dir,Eve}$(rn,n)
+\end{logic}
+
+\begin{logic}[DomP1]
+\loforall o, n. MayAccess$^{Dir,Eve}$(o,n)\linebreak \ablock\ablock \loimplies \linebreak
+\ablock \ablock MayAffect$^{Eve}$(o,n)\linebreak
+\end{logic}
+\textsc{Policy 1: Necessary Condition}
+\begin{logic}[NodeP1]
+\loforall n,o, RN\losubseteq ReNode.\linebreak
+Dom(RN,n) \loand\ MayAffect$^{Eve}$(o,n)\linebreak \ablock\loimplies \linebreak
+\ablock \loexists rn\loin RN. MayAccess$^{Ind,Eve}$(o,rn)\linebreak
+\ablock \ablock \ablock\loand\ MayAccess$^{Dir,Eve}$(rn,n)
+\end{logic}
+
+
+
+\subsection{Pattern 2: Redell's Caretaker}
+\subsection{Pattern 3: Membrane}
+
+
+
+
+\textbf{Policy 1}:
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	REFERENCE LIST
+%----------------------------------------------------------------------------------------
+\small
+\bibliographystyle{plain}
+\bibliography{ref}
+
+%----------------------------------------------------------------------------------------
+
+\end{document}
+
