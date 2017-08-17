@@ -350,14 +350,9 @@ M,\losigma\ \loturns\ $[$\loforall X*\loin{Obj}. \loneg MayAccess$^{Dir,Now}$(X*
 \ablock $[$\loforall Y*\loin{Obj}. \loneg MayAccess$^{Ind,Now}$(Y*,o')$]$\linebreak
 \hrule
 \end{logic}
-In addition to path being a necessary condition for capability, \textsc{gpe} gives us an additional new relation between the two concepts over the entire system. \textsc{gpe} says that in a given system of objects, $iff$ there exists an object Y* which has a path to o', then there exists an object X* that has the capability of o'. Looking from the left to right direction, since the path from Y* to o' exists, then there must exist an object X* with a capability of o' so that the path from Y* to o' is well-established. Moving from the right to left direction, \textsc{gpe} says that if an object X* has a capability then there exist an object Y* with a path to o', and this can be proven from \textsc{pec} or by definition when (X*==Y*).\\
-The contraposition result of \textsc{gpe} says that we can prevent all paths to o' through one of these conditions:
-\begin{itemize}
-\item Deny all direct paths leading into o' 
-\end{itemize}
+In addition to path being a necessary condition for capability, \textsc{gpe} gives us an additional new relation between the two concepts over the entire system. \textsc{gpe} says that in a given system of objects, $iff$ there exists an object Y* which has a path to o', then there exists an object X* that has the capability of o'. Looking from the left to right direction, since the path from Y* to o' exists, then there must exist an object X* with a capability of o' so that the path from Y* to o' is well-established. Moving from the right to left direction, \textsc{gpe} says that if an object X* has a capability then there exist an object Y* with a path to o', and this can be proven from \textsc{pec} or by definition when (X*==Y*). The contraposition result of \textsc{gpe} says that we can prevent all paths to o' through one of these conditions through denying all direct paths leading into o'.\\
 
-
-However, \textsc{gpe} only postulates the existence of some object with some capability iff there exists some object with some path, and says nothing about how the objects are connected. From the connectivity begets connectivity rule, \textsc{pec}, and \textsc{gpe}, we construct global path-execution and execution-execution relationships over the entire system:
+However, \textsc{gpe} only postulates the existence of some object with some capability iff there exists some object with some path, and says nothing about how the objects are connected. From the connectivity begets connectivity rule, \textsc{pec}, and \textsc{gpe}, we construct global path-execution relationships over the entire system:
 \begin{logic}
 \hrule\null
 \textsc{\normalsize *Global Path-Execution Connect. (GPEC)}\\
@@ -374,7 +369,6 @@ M,\losigma\ \loforall X*\loin{Obj}. $[$\loneg MayAccess$^{Ind,Now}$(o, X*) \loor
 \hrule
 \end{logic}
 \textsc{gpec} introduces an intermediate object X* between o and o' that makes explicit the missing connection in \textsc{gpe}.\\
-The contraposition result of \textsc{gpec} says that we can prevent all paths from o to o' through one of these conditions:
 
 The contraposition result of \textsc{gpec} says that for there to be no paths from o to o' these configurations must hold:
 \begin{itemize}\setlength\itemsep{0.5em}
@@ -418,7 +412,7 @@ M,\losigma\ \loturns\ \linebreak
 \item \textbf{Introduction:} o will only obtain the path to o' in some arising \losigma', therefore X* refers to an object that is not the same object as o (X*\loneq o). 
 \end{itemize}
 
-Note that for o to have an eventual path to o', we require only o to have an eventual path to X* since we have stated that X* will have an eventual path to o'. If o already has a path to X* in \losigma\ then we know o can reach X* in \losigma'. If not, the capability of X* must be introduced to o. For X* to introduce itself, X* must have the capability of o in \losigma', and the only way we can guarantee is to have X* possess the capability of o in \losigma. Well, what if the capability of X* is introduced by some \textit{other} object \~X*? Note that in such a case, \~X* will have the capability of X*, and will therefore also be able to eventually have a path to o'. Also \~X* must also be able to introduce itself to o. There is hence no logical difference between \~X* and X* in our formal description and \~X* might simply be referred to as X*.\\
+Note that for o to have an eventual path to o', we require only o to have an eventual path to X* since we have stated that X* will have an eventual path to o'. If o already has a path to X* in \losigma\ then we know o can reach X* in \losigma'. If not, the capability of X* must be introduced to o. For X* to introduce itself, X* must have the capability of o in \losigma', and the only way we can guarantee this is to have X* possess the capability of o in \losigma. Well, what if the capability of X* is introduced by some \textit{other} object \~X*? Note that in such a case, \~X* will have the capability of X*, and will therefore also be able to eventually have a path to o'. Also \~X* must also be able to introduce itself to o. There is hence no logical difference between \~X* and X* in our formal description and \~X* might simply be referred to as X*.\\
 
 The contraposition result of \textsc{epc1} says that for there to be no eventual paths from o to o' these configurations must hold:
 \begin{itemize}\setlength\itemsep{0.5em}
@@ -582,7 +576,7 @@ M,\losigma\ \loturns\ $[$\loexists X*\loin{Obj}. MayAffect$^{Now}$(X*,o')$]$\lin
 \textsc{gsce} can be derived from our predicate definitions, and makes explicit the connection betwen state change, paths, and capabilities. The first implication states that if an object can change the state of o', then there must exist an object in the system that holds the capability of o'. The second implication is that there must exist an object in the system that holds a path to o'.
 We view reasoning about state change as reasoning about protection, which we elaborate in the next subsection.
 
-\subsubsection{Protection is about object-path denial}
+\subsubsection{Protection is about local object-path denial and global capability denial}
 \begin{logic}
 M,\losigma\ \loturns\ MayAffect$^{Eve}$(o,o') \lonimplies 
 MayAccess$^{Dir,Eve}$(o,o')\linebreak
@@ -651,9 +645,9 @@ So far our results serve as a good base to enforce \loneg MayAffect$^{Eve}(o,o')
 M,\losigma\ \loturns\ MayAffect$^{Eve}$(o,o')\linebreak
 \ablock \loimplies\linebreak
 \ablock \loexists X*\loin Obj.$[($MayAccess$^{Ind,Now}$(o,X*) \loor \linebreak
-\ablock \ablock \ablock \ablock MayAccess$^{Dir,Now}$(X*,o)$)$\linebreak
+\ablock \ablock \ablock \quad MayAccess$^{Dir,Now}$(X*,o)$)$\linebreak
 \ablock \ablock \ablock \ablock \loand \linebreak
-\ablock \ablock \ablock \ablock MayAccess$^{Ind,Eve}$(X*,o')$]$
+\ablock \ablock \ablock \quad MayAccess$^{Ind,Eve}$(X*,o')$]$
 \linebreak \\
 \textit{By contraposition,}\linebreak
 M,\losigma\ \loturns\ 
@@ -665,7 +659,92 @@ M,\losigma\ \loturns\
 	\ablock\loneg MayAffect$^{Eve}(o,o')$\linebreak
 \hrule
 \end{logic}
-, where we can always use \textsc{gpec} to expand indirect paths into direct capabilities till we reach the terminating origin o and recursively use the condition to expand the condition till we reach the terminating o'.\\
+, where we can always use \textsc{gpec} to expand indirect paths into direct capabilities till we reach the terminating origin o and recursively use the condition to expand the condition till we reach the terminating o'. \textsc{npc2} gives us the present path configurations that will allow an eventual path from o to o' as a necessary condition for o to modify o'.But if objects are path-isolated, how do we allow them to cooperate? 
+
+\textsc{nec2} and \textsc{npc2} show the necessary capability and path conditions for protection. Is there a relation that can capture the essence of both? Notice how, we have said in \textsc{nec2} that there must exist some object in the system (that is not necssarily o) that has the capability of o', while in \textsc{npc2}, we said that o must have a path to o'. Surely it must mean then that the object X* in \textsc{nec2} that has the capability of o' refers to the last object on the path from o to o' mentioned in \textsc{npc2}. We now bring these results together, by making use of \textsc{gpec} to make explicit the last object in the eventual path holding the capability of o' in \textsc{npc2}:\\
+\begin{logic}
+\hrule\null
+\textsc{\normalsize *Necessary Execution-Path Condition* (NEPC*)}\\
+M,\losigma\ \loturns\ MayAffect$^{Eve}$(o,o')\linebreak
+\ablock \loimplies\linebreak
+\ablock \loexists X*\loin Obj.$[($MayAccess$^{Ind,Now}$(o,X*) \loor \linebreak
+\ablock \ablock \ablock \ablock MayAccess$^{Dir,Now}$(X*,o)$)$\linebreak
+\ablock \ablock \ablock \ablock \loand \linebreak
+\ablock \loexists Y*\loin{Obj}. $[$MayAccess$^{Ind,Eve}$(X*, Y*) \loand\linebreak
+\ablock \ablock \ablock \ablock MayAccess$^{Dir,Eve}$(Y*,o')$]$
+\linebreak \\
+\textit{By contraposition,}\linebreak
+M,\losigma\ \loturns\ 
+\loforall X*\loin Obj. $[$\loneg MayAccess$^{Ind,Now}$(o,X*) \loand \linebreak
+\ablock \ablock \ablock \ablock \loneg MayAccess$^{Dir,Now}$(X*,o)$]$\linebreak
+\ablock \ablock \ablock \ablock \loor \linebreak
+\ablock \quad\loforall Y*\loin{Obj}. $[$MayAccess$^{Ind,Eve}$(X*, Y*) \loor\linebreak
+\ablock \ablock \ablock \ablock MayAccess$^{Dir,Eve}$(Y*,o')$]$
+\ablock \loimplies \linebreak
+	\ablock\loneg MayAffect$^{Eve}(o,o')$\linebreak
+\hrule
+\end{logic}
+\textsc{nepc*} is nice, because we can see the necessary path condition and the condition that an object must hold the capability of o'. But what does it mean to modify an object? No matter how long the path from o to o' is, surely to modify o' requires the last object on our path to \textit{be} the 'final messenger' that will call the object's behaviour to modify it---which means MayAffect$^{Eve}$(Y*,o') \textit{must} hold. We express this by extending \textsc{nepc1*} to \textsc{nepc2*}.
+\begin{minipage}{\linewidth}
+\begin{logic}
+
+\hrule\null
+\textsc{\normalsize *Necessary Execution-Path Condition 2* (NEPC2*)}\\
+M,\losigma\ \loturns\ MayAffect$^{Eve}$(o,o')\linebreak
+\ablock \loimplies\linebreak
+\ablock \loexists X*\loin Obj.$[($MayAccess$^{Ind,Now}$(o,X*) \loor \linebreak
+\ablock \ablock \ablock \quad MayAccess$^{Dir,Now}$(X*,o)$)$\linebreak
+\ablock \ablock \ablock \ablock \loand \linebreak
+\ablock \loexists Y*\loin{Obj}. $[$MayAccess$^{Ind,Eve}$(X*, Y*) \loand\linebreak
+\ablock \ablock \ablock \quad MayAccess$^{Dir,Eve}$(Y*,o') \loand\linebreak
+\ablock \ablock \ablock \quad MayAffect$^{Eve}$(Y*,o')$]$
+\linebreak \\
+\textit{By contraposition,}\linebreak
+M,\losigma\ \loturns\ 
+\loforall X*\loin Obj. $[$\loneg MayAccess$^{Ind,Now}$(o,X*) \loand \linebreak
+\ablock \ablock \ablock \ablock \loneg MayAccess$^{Dir,Now}$(X*,o)$]$\linebreak
+\ablock \ablock \ablock \ablock \loor \linebreak
+\ablock \quad\loforall Y*\loin{Obj}. $[$MayAccess$^{Ind,Eve}$(X*, Y*) \loor\linebreak
+\ablock \ablock \ablock \ablock MayAccess$^{Dir,Eve}$(Y*,o') \loor\linebreak
+\ablock \ablock \ablock \ablock MayAffect$^{Eve}$(Y*,o')$]$
+\ablock \loimplies \linebreak
+	\ablock\loneg MayAffect$^{Eve}(o,o')$\linebreak
+\hrule\null
+\end{logic}
+\end{minipage}
+\linebreak\\
+
+\textsc{nepc2*} has the intuitive meaning that in order to say object o may modify object o' in some eventual state, \textit{all} these three conditions must hold:
+\begin{itemize}
+\item there must be some present path configuration such that an eventual path from o to o' can arise
+\item there must be an object Y* that sits as the last object along the eventual path to o', that has the capability of o'
+\item object Y* must be able to modify o'
+\end{itemize} 
+
+The logics we have developed show that security of an object can be enforced in an OCap model by:
+\begin{itemize}
+\item being careful about our present path configurations so that we can ensure eventual path-isolation between the object and untrusted object
+\item specifying security policies on how \textit{all} objects with the direct capability of our trusted object may modify the object
+\end{itemize}
+Therein lies also the difference between OCap and non-OCap models, because non-OCap models that allow forging of capabilities or a global ambient authoriy \textit{cannot} enforce security through path isolation, which is a distinctive feature of OCap models. How do we then expect objects with the direct capability of o' may modify o' through some security policy? The nice thing is we already have a predicate MayAffect$^{Eve}$(*,*) that can accomodate these security policies. Notice how in \textsc{NEPC*}, object Y* sits as the last object in the path from o to o' and has the capability of o'. This gives us a clue as to how we can enable protection of o' without denying paths and writing security policies that allow 
+
+
+\subsection{What about Cooperation?}
+At this juncture, it is good to know we can enforce protection through denying possible path configurations, but in practice this is still not useful. Cooperation between objects require paths to exist between objects so it is rare or almost impossible to have two objects o and o' that cooperate while \loneg MayAccess$^{Ind,Eve}$(o,o') holds. The quintessential question in OCap systems is whether we can enforce protection such as controlling whether o may affect o' while \textit{still} allowing paths to exist between them. This is possible, because of Rule 3 that says objects may have private encapsulation of state and behaviour. To begin, let us assume a simple object o' that has \textit{only} private behaviours. In such a scenario, since all fields in our system are also assumed to be private, then we know:
+\begin{logic} \loturns\ \loforall X*\loin Obj, X*\loneq o'. \loneg MayAffect(X*,o') \end{logic}
+Notice, how protection of o' can occur independent of paths and capability, due to object encapsulation. This means that objects can specify security policies that it chooses to enforce.
+
+\subsubsection{How can security policies be enforced by objects?}
+In the previous example we have demonstrated in OCap systems that objects can, at the very least enforce protection policies on \textit{itself}. But can we have objects enforcing security policies on \textit{other} objects? Let us examine this with another example.\\
+
+If we have some starting configuration in a system where there is only one object o that has the capability of o', and no other objects have the capability of o', then we know any eventual path to o' has to include and end with the sub-path from o to o', \textit{unless} o leaks the capability of o' to some other object X*. Notice how the sub-path o to o' is also a direct capability from o to o'. Object o, therefore, has the power to dictate the policies that can affect o' through itself, and state more precise stronger necessary conditions for the MayAffect$^{Eve}${(o,o') predicate, conditions other than path existence which we have argued. To put it in another way, we can now allow a path to exist from o to o', \textit{and} still enforce \loneg MayAffect$^{Eve}$(o,o'), because the negation of these stronger security policy conditions results in weaker antecedents for protection consequence.\\
+
+
+
+
+
+
+
 
 We now see the power of OCap patterns hence lies in providing concrete examples of a system of cooperation that allows the existence of paths between objects for cooperation while still dictating the degree of control of one object can have over another. The logics we have developed so far illuminate the power of attenuating objects X* that can enable protection. Indeed attenuating objects feature prominently in the literature of OCap patterns which we shall see in the next section.
 
