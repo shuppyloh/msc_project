@@ -288,7 +288,7 @@ M,\losigma\ \loturns\ MayAffect$^{Now}$(x,e) \loiff \linebreak
 \ablock \loexists \loconj{m},\loconj{a},\losigma'. x.\loconj{m}(\loconj{a}) \loleadsto\ \losigma' \loand \loexec{e}{\losigma} \loneq \loexec{e}{\losigma'}
 \linebreak \\
 M,\losigma\ \loturns\ MayAffect$^{Eve}$(x,e) \loiff \linebreak
-\ablock \loexists \losigma \loin Arising(M,\losigma).\linebreak
+\ablock \loexists \losigma' \loin Arising(M,\losigma).\linebreak
 \ablock \loexists \loconj{m},\loconj{a},\losigma'. x.\loconj{m}(\loconj{a}) \loleadsto\ \losigma' \loand \loexec{e}{\losigma} \loneq \loexec{e}{\losigma'}
 \linebreak \\
 \textit{If e is an object:} \\
@@ -389,6 +389,8 @@ M,\losigma\ \loturns\ MayAccess$^{Ind,Eve}$(o,o')\linebreak
 \ablock \loexists X*\loin Obj. $\{[$MayAccess$^{Ind,Now}$(o,X*)\linebreak
 \ablock \ablock \ablock \ablock\loor \linebreak
 \ablock \ablock \ablock \quad\: MayAccess$^{Dir,Now}$(X*,o)$]$\linebreak
+\ablock \ablock \ablock \ablock\loor \linebreak
+\ablock \ablock \ablock \quad\: MayCreate$^{Dir,Now}$(o,X*)$]$\linebreak
 \ablock \ablock \ablock \quad \loand \linebreak
 \ablock \ablock \ablock \quad MayAccess$^{Ind,Eve}$(X*,o')$\}$
 \linebreak \\
@@ -659,7 +661,13 @@ M,\losigma\ \loturns\
 	\ablock\loneg MayAffect$^{Eve}(o,o')$\linebreak
 \hrule
 \end{logic}
-, where we can always use \textsc{gpec} to expand indirect paths into direct capabilities till we reach the terminating origin o and recursively use the condition to expand the condition till we reach the terminating o'. \textsc{npc2} gives us the present path configurations that will allow an eventual path from o to o' as a necessary condition for o to modify o'. But if objects are path-isolated, how do we allow them to cooperate? 
+, where we can always use \textsc{gpec} to expand indirect paths into direct capabilities till we reach the terminating origin o and recursively use the condition to expand the condition till we reach the terminating o'. \textsc{npc2} gives us the present path configurations that will allow an eventual path from o to o' as a necessary condition for o to modify o'. \textsc{npc2} tells us that we can enforce protection of o' from o by denying all eventual paths from o to o'. But if those objects are path-isolated, how do we allow them to cooperate? 
+
+\subsection{What about Cooperation?}
+It is good to know we can enforce protection through some present path configurations that can guarantee eventual path-isolation, but in practice this is still not useful. Cooperation between objects require paths to exist between objects so it is rare or almost impossible to have two objects o and o' that cooperate while \loneg MayAccess$^{Ind,Eve}$(o,o') holds. The quintessential question in OCap systems is whether we can enforce protection such as controlling whether o may affect o' while \textit{still} allowing paths to exist between them. This is possible, because of Rule 3 that says objects may have private encapsulation of state and behaviour. To begin, let us assume a simple object o' that has \textit{only} private behaviours. In such a scenario, since all fields in our system are also assumed to be private, then we know:
+\begin{logic} \loturns\ \loforall X*\loin Obj, X*\loneq o'. \loneg MayAffect$^{Eve}$(X*,o') \end{logic}
+
+Notice, how protection of o' can occur independent of paths and capability, due to object encapsulation. This means that objects can specify security policies that it chooses to enforce \textit{internally}. Can we further develop our necessary conditions to show this?\\
 
 \textsc{nec2} and \textsc{npc2} show the necessary capability and path conditions for protection. Is there a relation that can capture the essence of both? Notice how, we have said in \textsc{nec2} that there must exist some object in the system (that is not necssarily o) that has the capability of o', while in \textsc{npc2}, we said that o must have a path to o'. Surely it must mean then that the object X* in \textsc{nec2} that has the capability of o' refers to the last object on the path from o to o' mentioned in \textsc{npc2}. We now bring these results together, by making use of \textsc{gpec} to make explicit the last object in the eventual path holding the capability of o' in \textsc{npc2}:\\
 \begin{logic}
@@ -684,10 +692,9 @@ M,\losigma\ \loturns\
 	\ablock\loneg MayAffect$^{Eve}(o,o')$\linebreak
 \hrule
 \end{logic}
-\textsc{nepc*} is nice, because we can see the necessary path condition and the condition that an object must hold the capability of o'. But what does it mean to modify an object? No matter how long the path from o to o' is, surely to modify o' requires the last object on our path to \textit{be} the 'final messenger' that will call the object's behaviour to modify it---which means MayAffect$^{Eve}$(Y*,o') \textit{must} hold. We express this by extending \textsc{nepc1*} to \textsc{nepc2*}.
+\textsc{nepc*} is nice, because we can see the necessary path condition and the condition that an object must hold the capability of o'. But what does it mean to modify an object? No matter how long the path from o to o' is, surely to modify o' requires the last object on our path to \textit{be} the 'final messenger' that will call the object's behaviour to modify it---which means MayAffect$^{Eve}$(Y*,o') \textit{must} hold. We express this by extending \textsc{nepc1*} to get \textsc{nepc2*}:\linebreak\\
 \begin{minipage}{\linewidth}
 \begin{logic}
-
 \hrule\null
 \textsc{\normalsize *Necessary Execution-Path Condition 2* (NEPC2*)}\\
 M,\losigma\ \loturns\ MayAffect$^{Eve}$(o,o')\linebreak
@@ -728,21 +735,26 @@ The logics we have developed show that security of an object can be enforced in 
 \end{itemize}
 Therein lies also the difference between OCap and non-OCap models, because non-OCap models that allow forging of capabilities or a global ambient authoriy \textit{cannot} enforce security through path isolation, which is a distinctive feature of OCap models.\\
 
-The similarity is that both models allow us to specify policies \textit{within} objects as to whether an object's behaviour can be called (although non OCap systems can do so 'externally' through a global ambient authority). 'Internal' object protection can be done through using defensive programming techniques like encapsulation and checking of conditions for behaviours to succeed. In a way these forms of protection can be a form of 'stack-based' access control from the called object's perspective, because they only happen \textit{after} the calling object already has already called the object.\\
+The similarity is that both models allow us to specify policies \textit{within} objects as to whether an object's behaviour can be called (non-OCap systems can do so 'externally' through a global ambient authority). 'Internal' object protection can be done through using defensive programming techniques like encapsulation and checking of conditions for behaviours to succeed. In a way these forms of protection can be a form of 'stack-based' access control from the called object's perspective, because they only happen \textit{after} the calling object has already called the object.\\
 
-How do we then these internal object security policies in our logical framework? The nice thing is we already have a predicate MayAffect$^{Eve}$(*,*) that can accomodate this. Notice how in \textsc{NEPC2*}, object Y* sits as the last object in the path from o to o' \textit{and} has the capability of o'. This gives us a clue as to how we can enable protection of o' without denying paths, by \textit{specifying whether Y* can affect o' explicitly in security policies} that are independent of paths.
+How do we then express these internal object security policies in our logical framework? The nice thing is we already have a predicate MayAffect$^{Eve}$(*,*) that can accomodate this. Notice how in \textsc{NEPC2*}, object Y* sits as the last object in the path from o to o' \textit{and} has the capability of o'. This gives us a clue as to how we can enable protection of o' without denying paths, by \textit{specifying whether Y* can affect o' explicitly in security policies} that are independent of paths.
 
 
-\subsection{What about Cooperation?}
-It is good to know we can enforce protection through denying possible path configurations, but in practice this is still not useful. Cooperation between objects require paths to exist between objects so it is rare or almost impossible to have two objects o and o' that cooperate while \loneg MayAccess$^{Ind,Eve}$(o,o') holds. The quintessential question in OCap systems is whether we can enforce protection such as controlling whether o may affect o' while \textit{still} allowing paths to exist between them. This is possible, because of Rule 3 that says objects may have private encapsulation of state and behaviour. To begin, let us assume a simple object o' that has \textit{only} private behaviours. In such a scenario, since all fields in our system are also assumed to be private, then we know:
-\begin{logic} \loturns\ \loforall X*\loin Obj, X*\loneq o'. \loneg MayAffect(X*,o') \end{logic}
-Notice, how protection of o' can occur independent of paths and capability, due to object encapsulation. This means that objects can specify security policies that it chooses to enforce.
 
 \subsubsection{How can security policies be enforced by objects?}
-In the previous example we have demonstrated in OCap systems that objects can, at the very least enforce protection policies on \textit{itself}. But can we have objects enforcing security policies on \textit{other} objects? Let us examine this with another example.\\
+In the previous example of an object with all fields and behaviours private, we have demonstrated in OCap systems that objects can, at the very least enforce protection policies on \textit{itself}. But can we have objects enforcing security policies on \textit{other} objects? Let us examine this with another example.\\
 
-If we have some starting configuration in a system where there is only one object o that has the capability of o', and no other objects have the capability of o', then we know any eventual path to o' has to include and end with the sub-path from o to o', \textit{unless} o leaks the capability of o' to some other object. Notice how the sub-path o to o' is also a direct capability from o to o'. Object o, therefore, has the power to dictate the policies that can affect o' through itself (since it holds the direct capability of o'), and state more precise stronger necessary conditions for the MayAffect$^{Eve}${(o,o') predicate. To put it in another way, we can now allow a path to exist from o to o', \textit{and} still enforce \loneg MayAffect$^{Eve}$(o,o'), because the negation of these stronger security policy conditions results in weaker antecedents for \loneg MayAffect$^{Eve}$(o,o'). This can be done simply, be ensuring that object o has the capability of o' stored in some private field but has no behaviours that will make use and call this capability.\\
-
+If we have some starting configuration in a system where there is some object X* that belongs to a set of objects belonging to the same class called AttenObj that has the capability of o', and no other objects have the capability of o', then we know any eventual path to o' has to include and end with the sub-path from X* to o', \textit{unless} X* leaks the capability of o' to some other object. If object X* has no way of leaking the capability of object o', then it has the power to dictate the policies in all eventual states that can affect o' through itself (since it holds the direct capability of o'), and state more precise stronger necessary conditions for the MayAffect$^{Eve}${(X*,o') predicate. To put it in another way, we can now allow a path to exist from X* to o', \textit{and} still enforce \loneg MayAffect$^{Eve}$(X*,o'), because the negation of these stronger security policy conditions results in weaker antecedents that imply \loneg MayAffect$^{Eve}$(X*,o').
+\begin{itemize}
+\item X* has no behaviour that will make use of and call the capability of o':
+\begin{logic} M,\losigma\ \loturns\ \loforall X*\loin AttenObj. MayAffect$^{Eve}$(X*,o')\linebreak
+\ablock \loimplies $\bot$\end{logic}
+\item X* has only one behaviour that will modify o' if it holds a boolean field \texttt{access} that is evaluated to true:
+\begin{logic} M,\losigma\ \loturns\ \loforall X*\loin AttenObj. MayAffect$^{Eve}$(X*,o')\linebreak
+\ablock \loimplies\linebreak 
+\ablock \loexists \losigma' \loin Arising(M,\losigma).\linebreak
+\ablock \ablock \loexec{x.\texttt{allow}}{\losigma'} = \loexec{\texttt{true}}{\losigma'} \end{logic}
+\end{itemize}
 A key result from this analysis shows the importance of attenuating objects, objects that sit as the last line of defence in the eventual paths to our protected objects. In the OCap pattern examples we will go through in the next section, protection of an object is done through some attenuating object that the trusted object knows will never leak its capability directly (the trusted object can ensure this if it creates those attenuating objects), and that protection is enforced through some security policies within those attenuating objects.\\\
 
 If the protected object can guarantee through the system of configuration that those attenuating objects are the \textit{only} objects in the entire system that holds its capability in \textit{all} eventual states, then the protected object can dictate the conditions and degree of control on how it can be used by untrusted objects in all eventual states through those attenuating objects. This ability of the protected object to dictate control across time and conditions enables cooperation, where conditions on how the protected object will cooperate is written in those attenuating objects.
@@ -768,7 +780,26 @@ We use a JavaScript DOM Tree OCap pattern largely inspired by the example in Dev
 \end{logic}
 The vulnerability of a node lies in the fact that it contains a public method \texttt{setProperty(key,value)} that will modify an internal mapping data structure. A node also has a public field \texttt{parent} that will return the capability of its parent node. Consequently, this allows an object which has the capability of any one node in the tree to navigate up to the root node (Document), and consequently navigate to all other nodes in the tree.
 
+\begin{logic} 
+\hrule\null
+\textsc{\normalsize *ReNode to Node Condition*}\\
+M,\losigma\ \loturns\ \loforall rn\loin ReNode. MayAffect$^{Eve}$(rn,n)\linebreak
+\ablock \loimplies \linebreak
+\ablock \loexists \losigma' \loin Arising(M,\losigma).\linebreak
+\ablock \ablock \loexec{rn.\texttt{node}}{\losigma'} = \loexec{e}{\losigma'} \loand\ \{\texttt{e is n}\}\linebreak
+\hrule
+\end{logic}
 
+\begin{logic} 
+\hrule\null
+\textsc{\normalsize *ReNode Parenthood Condition*}\\
+M,\losigma\ \loturns\ \loforall rn,rn.parent \loin ReNode. MayAccess$^{Dir,Eve}$(rn,rn.parent)<---Or do we need a MayCreate predicate?\linebreak
+\ablock \loimplies \linebreak
+\ablock \loexists \losigma' \loin Arising(M,\losigma).\linebreak
+\ablock \loand\ \loexec{rn.\texttt{depth}}{\losigma'} = \loexec{e}{\losigma'} \loand\ e > 0\linebreak
+\ablock \loand\ \loexec{rn.parent \texttt{depth}}{\losigma'} = \loexec{e'}{\losigma'} \loand\ e' = e - 1\linebreak
+\hrule
+\end{logic}
 %----------------------------------------------------------------------------------------
 %	REFERENCE LIST
 %----------------------------------------------------------------------------------------
