@@ -360,12 +360,16 @@ M,\losigma\ \loturns\ MayAccess$^{Ind,Now}$(o,o')\linebreak
 \ablock \loiff\linebreak
 \ablock \loexists X*\loin{Obj}. $[$MayAccess$^{Ind,Now}$(o, X*) \loand\linebreak
 \ablock \ablock \ablock \quad MayAccess$^{Dir,Now}$(X*,o')$]$
-\linebreak\\
+\\
+\ablock \textit{where if z exists in \losigma,} \linebreak
+\ablock \loturns\ MayAccess$^{Ind,Now}$(z,z) is true \linebreak
+\\
 \textit{By contraposition,} \\
 M,\losigma\ \loforall X*\loin{Obj}. $[$\loneg MayAccess$^{Ind,Now}$(o, X*) \loor\linebreak
 \ablock \ablock \ablock \quad \loneg MayAccess$^{Dir,Now}$(X*,o')$]$\linebreak
 \ablock \loiff\linebreak
-\ablock \loneg MayAccess$^{Ind,Now}$(o,o')\linebreak
+\ablock \loneg MayAccess$^{Ind,Now}$(o,o')
+
 \hrule
 \end{logic}
 \textsc{gpec} introduces an intermediate object X* between o and o' that makes explicit the missing connection in \textsc{gpe}.\\
@@ -380,7 +384,7 @@ The contraposition result of \textsc{gpec} says that for there to be no paths fr
 
 The power in \textsc{gpec} lies in the recursive predicate MayAccess$^{Ind,Now}$(o, X*) that can eventually be expanded into a set of MayAccess$^{Dir,Now}$ predicates that finishes with terminating predicate MayAccess$^{Ind,Now}$(o, o), where the terminating predicate will always be true, unless the object o does not exist in \losigma.
 We now look for a relation between a path configuration at a state \losigma\ ($Now$) and eventual path configurations in states \losigma' arising from \losigma\ ($Eve$).\vfill
-\begin{minipage}[b]{\linewidth}
+\begin{minipage}{\linewidth}
 \begin{logic}
 \hrule\null
 \textsc{\normalsize *Eventual Path Connectivity 1 (EPC1)}\\
@@ -391,7 +395,10 @@ M,\losigma\ \loturns\ MayAccess$^{Ind,Eve}$(o,o')\linebreak
 \ablock \ablock \ablock \quad\: MayAccess$^{Dir,Now}$(X*,o)$]$\linebreak
 \ablock \ablock \ablock \quad \loand \linebreak
 \ablock \ablock \ablock \quad MayAccess$^{Ind,Eve}$(X*,o')$\}$
-\linebreak \\
+\\
+\ablock \textit{where if z' exists in \losigma,} \linebreak
+\ablock \loturns\ MayAccess$^{Ind,Eve}$(z',z') is true \linebreak
+\\
 \textit{By contraposition,}\linebreak
 M,\losigma\ \loturns\ \linebreak
 \ablock \loforall X*\loin Obj. $\{[$\loneg MayAccess$^{Ind,Now}$(o,X*)\linebreak
@@ -400,7 +407,7 @@ M,\losigma\ \loturns\ \linebreak
 \ablock \ablock \ablock \quad \loor \linebreak
 \ablock \ablock \ablock \quad \loneg MayAccess$^{Ind,Eve}$(X*,o')$\}$\linebreak
 \ablock \loimplies\linebreak
-	\ablock\loneg MayAccess$^{Ind,Eve}(o,o')$\linebreak
+	\ablock\loneg MayAccess$^{Ind,Eve}$(o,o')\linebreak
 \hrule
 \end{logic}
 \end{minipage}
@@ -447,7 +454,10 @@ M,\losigma\ \loturns\ MayAccess$^{Ind,Eve}$(o,o')\linebreak
 \ablock \ablock \ablock \ablock \quad MayAccess$^{Ind,Eve}$(Y*,o')$\}$
 }\linebreak
 \ablock \ablock $\}$
-\linebreak \\
+\\
+\ablock \textit{where if z' exists in \losigma,} \linebreak
+\ablock \loturns\ MayAccess$^{Ind,Eve}$(z',z') is true \linebreak
+\\
 \textit{By contraposition,}\linebreak
 M,\losigma\ \loturns\ \linebreak
 \ablock \loforall X*\loin Obj.$\{$\linebreak
@@ -520,12 +530,11 @@ M,\losigma\ \loturns\ MayAccess$^{Ind,Eve}$(o,o')\linebreak
 \ablock \ablock \ablock \ablock \quad\: \loor \linebreak
 \ablock \ablock \ablock \ablock \quad\: MayAccess$^{Dir,Now}$(X*,o)$\}$\linebreak
 \ablock \ablock \ablock \ablock \loand \linebreak
-\ablock \ablock \ablock \quad MayAccess$^{Ind,Eve}$(X*,o')\linebreak\\
-\ablock \textit{where if o exists in \losigma,} \linebreak
-\ablock \loturns\ MayAccess$^{Ind,Now}$(o,o) is true\linebreak\linebreak\
-\ablock \textit{where if o' exists in some \losigma',}\linebreak
-\ablock \loturns\ MayAccess$^{Ind,Eve}$(o',o') is true\linebreak
-\hrule
+\ablock \ablock \ablock \quad MayAccess$^{Ind,Eve}$(X*,o')
+\\
+\ablock \textit{where if z' exists in \losigma,} \linebreak
+\ablock \loturns\ MayAccess$^{Ind,Eve}$(z',z') is true \linebreak
+\\
 \hrule
 \end{logic}
 
@@ -542,7 +551,10 @@ M,\losigma\ \loturns\ MayAccess$^{Dir,Eve}$(o,o')\linebreak
 \ablock \ablock \ablock \ablock MayAccess$^{Dir,Now}$(X*,o)$)$\linebreak
 \ablock \ablock \ablock \ablock \loand \linebreak
 \ablock \ablock \ablock \ablock MayAccess$^{Dir,Eve}$(X*,o')$]$
-\linebreak \\
+\\
+\ablock \textit{where if o' exists in some \losigma',}\linebreak
+\ablock \loturns\ MayAccess$^{Dir,Eve}$(o',o') is true\linebreak
+\\
 \textit{By contraposition,}\linebreak
 M,\losigma\ \loturns\ 
 \loforall X*\loin Obj. $\{[$\loneg MayAccess$^{Dir,Now}$(o,X*) \loand \linebreak
@@ -700,12 +712,8 @@ M,\losigma\ \loturns\ MayAffect$^{Ind,Eve}$(o,o')\linebreak
 \ablock \ablock \ablock \ablock \quad\: \loor \linebreak
 \ablock \ablock \ablock \ablock \quad\: MayAccess$^{Dir,Now}$(X*,o)$\}$\linebreak
 \ablock \ablock \ablock \ablock \loand \linebreak
-\ablock \ablock \ablock \quad MayAccess$^{Ind,Eve}$(X*,o')\linebreak\\
-
-\ablock \textit{where if o exists in \losigma,} \linebreak
-\ablock \loturns\ MayAccess$^{Ind,Now}$(o,o) is true\linebreak\linebreak\
-\ablock \textit{where if o' exists in some \losigma',}\linebreak
-\ablock \loturns\ MayAccess$^{Ind,Eve}$(o',o') is true\linebreak
+\ablock \ablock \ablock \quad MayAccess$^{Ind,Eve}$(X*,o')
+\linebreak\\
 \hrule
 \end{logic}
 
@@ -835,13 +843,9 @@ M,\losigma\ \loturns\ MayAffect$^{Ind,Eve}$(o,o') \loand\ Dom(Y*,o')\linebreak
 \ablock \ablock \ablock \ablock \quad\: \loor \linebreak
 \ablock \ablock \ablock \ablock \quad\: MayAccess$^{Dir,Now}$(X*,o)$\}$\linebreak
 \ablock \ablock \ablock \ablock \loand \linebreak
-\ablock \ablock \loexists Y*\loin{AttenObj}.$[$MayAccess$^{Ind,Eve}$(X*, Y*) \loand\linebreak
+\ablock \ablock \loexists Y*\loin{AttenObj}.$[$MayAccess$^{Ind,Eve}$(X*,Y*) \loand\linebreak
 \ablock \ablock \ablock \ablock \ablock \quad MayAccess$^{Dir,Eve}$(Y*,o')$]$
-
-\ablock \textit{where if o exists in \losigma,} \linebreak
-\ablock \loturns\ MayAccess$^{Ind,Now}$(o,o) is true\linebreak\linebreak\
-\ablock \textit{where if o' exists in some \losigma',}\linebreak
-\ablock \loturns\ MayAccess$^{Dir,Eve}$(o',o') is true\linebreak
+\linebreak\\
 \hrule
 \end{logic}
 \end{minipage}\linebreak\\
@@ -884,25 +888,52 @@ The vulnerability of a node lies in the fact that it contains a public method \t
 \textsc{\normalsize *Necessary Node Condition***}\\
 If Y* dominates o' then:\\
 M,\losigma\ \loturns\ \loforall o\loin Obj, rn\loin ReNode, n\loin Node\linebreak
-ReNode\loin Obj, Node\loin Obj.\linebreak
+ReNode\loin Obj, Node\loin Obj, RN*\losubseteq ReNode.\linebreak
 \ablock MayAffect$^{Eve}$(o,n) \loand\ Dom(RN*,n)\linebreak
 \ablock \loimplies\linebreak
-\ablock \loexists X*\loin Obj.$\{[$MayAccess$^{Ind,Eve}$(o,X*)\linebreak
+\ablock \loexists X*\loin Obj.$[$MayAccess$^{Ind,Eve}$(o,X*)\linebreak
 \ablock \ablock \ablock \ablock \quad\: \loor \linebreak
-\ablock \ablock \ablock \ablock \quad\: MayAccess$^{Dir,Now}$(X*,o)$\}$\linebreak
+\ablock \ablock \ablock \: MayAccess$^{Dir,Now}$(X*,o)$]$\linebreak
 \ablock \ablock \ablock \ablock \loand \linebreak
-\ablock \ablock \loexists rn\loin{RN*}.$[$MayAccess$^{Ind,Eve}$(X*, rn) \loand\linebreak
-\ablock \ablock \ablock \ablock \ablock \quad MayAccess$^{Dir,Eve}$(rn,o')$]$
-
-\ablock \textit{where if o exists in \losigma,} \linebreak
-\ablock \loturns\ MayAccess$^{Ind,Now}$(o,o) is true\linebreak\linebreak\
-\ablock \textit{where if o' exists in some \losigma',}\linebreak
-\ablock \loturns\ MayAccess$^{Dir,Eve}$(o',o') is true\linebreak
-\hrule
+\ablock \ablock \loexists rn\loin{RN*}.$[$MayAccess$^{Ind,Eve}$(X*,rn) \loand\linebreak
+\ablock \ablock \ablock \ablock \quad MayAccess$^{Dir,Eve}$(rn,o')$]$\linebreak\\
 
 \hrule
 \end{logic}
 \end{minipage}\linebreak\\
+\begin{minipage}{\linewidth}
+\begin{logic}
+\hrule\null
+\textsc{\normalsize *Eventual Path Connectivity 1 (EPC1)}\\
+M,\losigma\ \loturns\ MayAccess$^{Ind,Eve}$(z,z')\linebreak
+\ablock \loimplies\linebreak
+\ablock \loexists X*\loin Obj. $\{[$MayAccess$^{Ind,Now}$(z,X*)\linebreak
+\ablock \ablock \ablock \ablock\loor \linebreak
+\ablock \ablock \ablock \quad\: MayAccess$^{Dir,Now}$(X*,z)$]$\linebreak
+\ablock \ablock \ablock \quad \loand \linebreak
+\ablock \ablock \ablock \quad MayAccess$^{Ind,Eve}$(X*,z')$\}$
+\\
+\ablock \textit{where if z' exists in some \losigma',}\linebreak
+\ablock \loturns\ MayAccess$^{Ind,Eve}$(z',z') is true
+\linebreak \\
+\hrule
+\end{logic}
+\end{minipage}
+\begin{logic}
+\hrule\null
+\textsc{\normalsize *Global Path-Execution Connect. (GPEC)}\\
+M,\losigma\ \loturns\ MayAccess$^{Ind,Now}$(z,z')\linebreak
+\ablock \loiff\linebreak
+\ablock \loexists X*\loin{Obj}. $[$MayAccess$^{Ind,Now}$(z, X*) \loand\linebreak
+\ablock \ablock \ablock \quad MayAccess$^{Dir,Now}$(X*,z')$]$
+\\
+\ablock \textit{where if z exists in \losigma,} \linebreak
+\ablock \loturns\ MayAccess$^{Ind,Now}$(z,z) is true
+\linebreak \\
+\hrule
+\end{logic}
+
+
 \begin{logic} 
 \hrule\null
 \textsc{\normalsize *ReNode to Node Condition*}\\
