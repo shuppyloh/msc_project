@@ -6,37 +6,37 @@ actor Main
         env = env'
         main = this
         let document: Node = Node.createRoot("Document")
-        let access: Bool = initWebPage(document, {(radnode: RNode ref)=>
+        let access: Bool = initWebPage(document, {(radnode: ReNode ref)=>
                 try radnode.parent().setProp("title", "Bob website") end 
                 }ref)
         env.out.print(access.string())
          
-fun ref initWebPage(document: Node, ad_lambda:{(RNode)}):Bool val=>
+fun ref initWebPage(document: Node, ad_lambda:{(ReNode)}):Bool val=>
     try
         document.setProp("title","Alice website")
         let adnode = document.addChild("ad_div")
-        let radnode = RNode(adnode, 0)
+        let radnode = ReNode(adnode, 0)
         ad_lambda(radnode)
         if document.getProp("title") is "Alice website" then return true
             else return false end
     else return false end
 
 
-class RNode 
+class ReNode 
     let _node: Node ref 
     let _d: U32
     new ref create(node':Node ref, d':U32)=>
         _node = node'; _d = d'
-    fun ref getChild(id:String val):RNode ref?=>
-        try RNode.create(_node.getChild(id), _d+1) else error end
-    fun ref parent():RNode ref?=>
-        if _d > 0 then RNode.create(_node.parent(), _d-1) else error end
+    fun ref getChild(id:String val):ReNode ref?=>
+        try ReNode.create(_node.getChild(id), _d+1) else error end
+    fun ref parent():ReNode ref?=>
+        if _d > 0 then ReNode.create(_node.parent(), _d-1) else error end
     fun box getProp(id:String val):String val ?=>
         try _node.getProp(id) else error end
     fun ref setProp(id:String val,prop:String val)=>
         _node.setProp(id, prop)
-    fun ref addChild(id:String val):RNode ref?=>
-        try RNode.create(_node.addChild(id), _d+1) else error end
+    fun ref addChild(id:String val):ReNode ref?=>
+        try ReNode.create(_node.addChild(id), _d+1) else error end
     fun ref delChild(id:String val)?=>
         try _node.delChild(id) else error end
             
