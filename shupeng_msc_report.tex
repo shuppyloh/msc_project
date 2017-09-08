@@ -578,11 +578,11 @@ M,\losigma\ \loturns\ Isolated(o,o$'$) \loiff\ \loneg MayAccess$^{Ind,Eve}$(o,o$
 
 Given \textsc{lemma epc}, we can enforce isolation of o$'$ from o given the present path configuration of a closed system at \losigma, and when the closed system is eventually opened such that an unknown object has permission and authority of \textit{only} object o in some arising state \losigma', we know that the unknown code will not have permission of o$'$, since o is isolated from o$'$.\\
 
-From the contraposition of the our observation previously that [Permission is necessary for Authority], we have the corollary:\\
+From the contraposition of the observation previously that [Permission is necessary for Authority], we have another observation:\\
 
 \begin{logic}
 \hr\\
-\emp{Isolation implies no authority}\\
+\emp{Observation---[Isolation implies no authority]}\\
 M,\losigma\ \loturns\ \loneg MayAccess$^{Ind,Eve}$(o,o$'$) \loimplies\ M,\losigma\ \loturns\ \loneg Maycall(o,o$'$)\\
 \hr
 \end{logic}
@@ -605,7 +605,7 @@ Furthermore, we make the observation between cooperation and authority that:\\
 \hr
 \end{logic} 
 
-We provide some analogies as to why cooperation does not imply authority. Object o can have the reference(capability) of o$'$, and hence there is cooperation, but o contains no methods that can invoke(use) the capability of o$'$, and thus o has the capability of o$'$ but not the authority of o$'$. Another analogy, from the other viewpoint of o$'$, would be that o$'$ has no available methods that can be invoked by o ---this can happen if o has no methods, or o only contains private methods or methods that are restricted for objects inherited from the same class as o of which o$'$ is not.\\
+We provide some analogies as to why cooperation does not imply authority. Object o can have the reference(capability) of o$'$, and hence there is cooperation, but o contains no methods that can invoke(use) the capability of o$'$, and thus o has the capability of o$'$ but not the authority of o$'$. Another analogy, from the other viewpoint of o$'$, would be that o$'$ has no available methods that can be invoked by o ---this can happen if o$'$ has no methods, or o$'$ only contains private methods or methods that are restricted for objects inherited from the same class as o$'$ of which o is not.\\
 
 The problem with cooperation is when we know o$'$ has exposed methods (or public methods), and when object o is of unknown provenance. Since we assume object o is unknown, then we must assume that given the permission of o$'$, o will contain some method that will try to invoke the behaviours of o$'$. This then leads us to our next section on vulnerability, safety, and protection in the context of cooperation.
 
@@ -702,7 +702,7 @@ M,\losigma\ \loturns\ \=ProtectedCooperation(o*,o$'$)\\
 \hr
 \end{logic}
 
-This says that if we have a configuration where object o$'$ is dominated by known objects, then the permission to use o$'$ by o* must involve at least a trusted object s$'$. Therefore we can allow cooperation between o* and o$'$, and still make it safe by using an attenuating trusted object to \textit{shift the vulnerability} from the object of interest o$'$ to the attenuating trusted object. This shows that we can use attenuating objects to implement cooperation without vulnerability (of the object of interest) in OCap systems.\\
+This says that if we have a configuration where object o$'$ is dominated by trusted objects, then the permission to use o$'$ by o* must involve at least a trusted object s$'$. Therefore we can allow cooperation between o* and o$'$, and still make it safe by using an attenuating trusted object to \textit{shift the vulnerability} from the object of interest o$'$ to the attenuating trusted object. This shows that we can use attenuating objects to implement cooperation without vulnerability (of the object of interest) in OCap systems.\\
 
 Therefore, this shows that we can always protect some object of interest by:
 
