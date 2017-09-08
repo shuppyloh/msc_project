@@ -825,10 +825,9 @@ fun ref initWebPage(document: Node, ad_lambda:{(ReNode)}):Bool val=>
 
 In the DOM Tree example above, we simulate initialising a webpage with a root \sf{document} node that we set the property of a map-key "title" having a map-value of "Alice website". We then create a node for an advertisement called \sf{adnode}. To allow the external party the authority to modify the properties of \sf{adnode}, we create a restricted node object \sf{radnode} with a depth level of 0 that points to \sf{adnode}. In the simulation, we execute a method \sf{ad\_lambda} that attempts to call code on \sf{radnode}, where in our simulation, \sf{ad\_lambda} attempts to modify the root \sf{Document} node's properties by attempting to change the value of the root node's map-key "title", to "Bob's website". This would fail, because we have constructed \sf{radnode} with a depth level of 0, so we know that \sf{radnode} will not be able to traverse up to the root node of the tree. Therefore, we know the title of the root\sf{document} node remains intact as "Alice website" after execution of \sf{ad\_lambda}.
 \begin{minipage}{\textwidth}
-\subsubsection{DOM Tree Pattern Illustration}\label{sec:figdom}
-\raggedright \small Here, we illustrate in more detail the example of the DOM Tree pattern in a visual diagram. Code can be found in found in \cref{sec:code_DOM}\\
-\centering
-\includegraphics[width=1.05\textwidth]{figures/DOM.pdf}
+\subsubsection{DOM Tree Pattern - Illustration}\label{sec:figdom}
+\small Here, we illustrate in more detail an example of the DOM Tree pattern. The code can be found in \cref{sec:code_DOM}.\\
+\includegraphics[width=\textwidth]{figures/DOM.pdf}
  \captionof{figure}{DOM Tree Example}\label{fig:figdom}
 \end{minipage}
 \clearpage
@@ -1127,7 +1126,7 @@ The Caretaker merely fulfils the simple task of 1) masking the protected object'
 We first show the important policies for the Caretaker pattern in \cref{sec:caretakerpolicies} and a visual illustration of it in \cref{fig:figcaretaker}. The policies for the Membrane pattern can be found next in \cref{sec:membranepolicies}, and its visual illustration in \cref{fig:figmem}. In the Caretaker pattern, while the status of the lock object \sf{Carol-CT-Lock} for the caretaker object \sf{Carol-CT} is disabled (\sf{Carol-CT.status = false}), object \sf{Bob} can pass his own capability to \sf{Carol} using \sf{Carol-CT}, and consequently, with \sf{Bob}'s capability, \sf{Carol} can pass the capability of \sf{Diane}, which \sf{Carol} initially holds, to \sf{Bob}. \textit{After} the \sf{Lock} object is enabled (\sf{Carol-CT.status = true}), \sf{Carol-CT} no longer forwards messages to \sf{Carol}. However, because \sf{Bob} has transferred his own capability to \sf{Carol}, and \sf{Carol} has transferred the capability of \sf{Diane} to \sf{Bob} during \sf{Carol-CT.status = false}, even after \sf{Carol-CT.status = true}, Carol can continue to communicate with \sf{Bob}, and \sf{Bob} can continue to communicate with \sf{Diane}, because these objects can store the capabilities they have received for future use. For the Membrane example however, for all messages that contain capabilities, those messages will be attenuated before being forwarded. When \sf{Bob} tries to send his own capability to \sf{Carol} through the membrane \sf{Carol-M}, \sf{Carol-M} will wrap the capability of \sf{Bob} within the message in a new membrane \sf{Bob-M} and lock \sf{Bob-M-Lock}, and forward the new membrane  \sf{Bob-M} to \sf{Carol}, and when \sf{Carol} tries to send the capability of \sf{Diane} to \sf{Bob} using \sf{Bob-M}, a similar membrane \sf{Diane-M} and lock object is created by \sf{Bob-M}. When \sf{Alice} decides to disable \sf{Carol-M} by setting \sf{Carol-M-Lock = true}, the disabling action can propagate to all membranes descended from \sf{Carol-M}, thereby preventing communication from \sf{Carol} to \sf{Bob} and \sf{Bob} to \sf{Diane}.
 
 \clearpage
-\subsubsection{Policies for Caretaker Pattern}\label{sec:caretakerpolicies}
+\subsubsection{Caretaker Pattern - Policies}\label{sec:caretakerpolicies}
 Here we show the important policies for the Caretaker pattern, where we also say how the Caretaker might leak paths in \textbf{Policy [Possible Leaked Paths from Caretaker]}. Path leakage is possible because the caretaker might possibly return the capability of its protected object o$'$ from some method call forwarded to o$'$, when o$'$ has a method that exposes its own capability; i.e. the caretaker does not create deep attenuating objects to mask capabilities returned by its protected object, or messages containing capabilities passed by its caller.\\
 
 \begin{logic}
@@ -1172,17 +1171,17 @@ Here we show the important policies for the Caretaker pattern, where we also say
 \end{logic}
 
 \begin{minipage}{\textwidth}
-\subsubsection{Caretaker Pattern Illustration}\label{sec:figcaretaker}
-\centering
+\subsubsection{Caretaker Pattern - Illustration}\label{sec:figcaretaker}
+\small Here, we illustrate in more detail an example of the Caretaker pattern. The code can be found in \cref{sec:code_Caretaker}.\\
 \includegraphics[width=1.05\textwidth]{figures/Caretaker.pdf}
  \captionof{figure}{Caretaker Pattern}
   \label{fig:figcaretaker}
 \end{minipage}
 \clearpage
-\subsubsection{Policies for Membrane Pattern}\label{sec:membranepolicies}
-Here we show the important policies for the Membrane pattern. Unlike the Caretaker pattern, a Membrane does not leak capabilities because the membrane creates deep attenuating new membranes to mask capabilities returned by its protected object, and capabilities in messages passed by its caller.\\
-
-Every membrane and lock object has a ghost field \sf{parent}: \begin{itemize}
+\subsubsection{Membrane Pattern - Policies}\label{sec:membranepolicies}
+Here we show the important policies for the Membrane pattern. Unlike the Caretaker pattern, a Membrane does not leak capabilities because the membrane creates deep attenuating new membranes to mask capabilities returned by its protected object, and do so also for capabilities in messages passed by its caller. A membrane that creates new membranes also creates the associated lock objects for the new membranes, and passes the capabilities of these new locks to its own associated lock object \sf{k}. Therefore when some other object calls the method \sf{lockall()}\\on the lock object \sf{k}, \sf{k} will recursively call the same method on all lock objects that it has.
+ 
+Therefore, every membrane and lock object has a ghost field \sf{parent}: \begin{itemize}
 \item The ghost field \sf{parent} of a membrane object \sf{m$'$} points to a membrane \sf{m} if the constructor for \sf{m$'$} is called  by \sf{m}, otherwise it points to \sf{null}
 \item The ghost field \sf{parent} of a lock object \sf{k$'$} points to a lock \sf{k} if the constructor for \sf{k$'$} is called by a membrane \sf{m}, where \sf{m.lock = k}, otherwise it points to \sf{null}
 \end{itemize}
@@ -1241,8 +1240,8 @@ Every membrane and lock object has a ghost field \sf{parent}: \begin{itemize}
 \end{logic}
 
 \begin{minipage}{\textwidth}
-\subsubsection{Membrane Pattern Illustration}\label{sec:figmem}
-\centering
+\subsubsection{Membrane Pattern - Illustration}\label{sec:figmem}
+\small Here, we illustrate in more detail an example of the Membrane pattern. The code can be found in \cref{sec:code_Membrane}.\\
 \includegraphics[width=1.05\textwidth]{figures/Membrane.pdf}
  \captionof{figure}{Membrane Pattern}
    \label{fig:figmem}
