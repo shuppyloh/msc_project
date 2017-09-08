@@ -6,10 +6,10 @@ actor Main
     new create(env':Env)=>
         env = env'
         env.out.print("---Initial Conditions---")
-        let alice: Node ref = Node.create(env,"alice")
-        let bob: Node ref = Node.create(env,"bob")
-        let carol: Node ref = Node.create(env,"carol")
-        let diane: Node ref = Node.create(env,"diane")
+        let alice: SimpleObj ref = SimpleObj.create(env,"alice")
+        let bob: SimpleObj ref = SimpleObj.create(env,"bob")
+        let carol: SimpleObj ref = SimpleObj.create(env,"carol")
+        let diane: SimpleObj ref = SimpleObj.create(env,"diane")
         try
         //initial conditions
         alice.recCap("bob",bob)
@@ -54,9 +54,9 @@ class Lock
         _state
 
 class Caretaker 
-    let _target: (Caretaker ref|Node ref)
+    let _target: (Caretaker ref|SimpleObj ref)
     var _lock: Lock ref  
-    new ref create(target':(Caretaker ref|Node ref), lock':Lock ref)=>
+    new ref create(target':(Caretaker ref|SimpleObj ref), lock':Lock ref)=>
         _target = target'
         _lock = lock'
     fun box _locked():Bool val=>
@@ -71,7 +71,7 @@ class Caretaker
         else error end
     fun ref recProp(id:String val,prop:String val)=>
         if _locked() is false then _target.recProp(id,prop) end
-    fun ref getCap(id:String val): (Node ref|Lock ref|Caretaker ref)?=>
+    fun ref getCap(id:String val): (SimpleObj ref|Lock ref|Caretaker ref)?=>
         try
             if _locked() is false then _target.getCap(id) else error end
         else error end
@@ -79,7 +79,7 @@ class Caretaker
         try
             if _locked() is false then _target.sendCap(id,rec) end
         else error end
-    fun ref recCap(id:String val, cap':(Node ref|Lock ref|Caretaker ref))=>
+    fun ref recCap(id:String val, cap':(SimpleObj ref|Lock ref|Caretaker ref))=>
         if _locked() is false then _target.recCap(id,cap') end
     fun ref delCap(id:String val)?=>
         try
@@ -90,10 +90,10 @@ class Caretaker
             if _locked() is false then _target.createCareT(id,target) else error end
         else error end
             
-class Node
+class SimpleObj
     let env: Env
     let name: String
-    let _caps: collections.Map[String val, (Node ref|Lock ref|Caretaker ref)] = _caps.create()
+    let _caps: collections.Map[String val, (SimpleObj ref|Lock ref|Caretaker ref)] = _caps.create()
     let _props: collections.Map[String val, String val] = _props.create()
 
     new ref create(env':Env, name':String)=>
@@ -108,16 +108,16 @@ class Node
         try _props(id) else error end
     fun ref sendProp(id:String val,prop:String val,rec: String val)?=>
         env.out.print(name+":sending ("+id+" as "+prop+") to "+rec)
-        try (getCap(rec) as (Caretaker ref|Node ref)).recProp(id,prop) else error end
+        try (getCap(rec) as (Caretaker ref|SimpleObj ref)).recProp(id,prop) else error end
     fun ref recProp(id:String val,prop:String val) =>
         env.out.print(name+":"+id+" changed to "+prop)
         _props(id)=prop
-    fun ref getCap(id:String val): (Node ref|Lock ref|Caretaker ref)?=>
+    fun ref getCap(id:String val): (SimpleObj ref|Lock ref|Caretaker ref)?=>
         try  _caps(id) else error end
     fun ref sendCap(id:String val, rec:String val)?=>
         env.out.print(name+":sending capability of "+id+" to "+rec)
-        try (getCap(rec) as (Caretaker ref|Node ref)).recCap(id, getCap(id)) else error end
-    fun ref recCap(id:String val, cap':(Node ref|Lock ref|Caretaker ref))=>
+        try (getCap(rec) as (Caretaker ref|SimpleObj ref)).recCap(id, getCap(id)) else error end
+    fun ref recCap(id:String val, cap':(SimpleObj ref|Lock ref|Caretaker ref))=>
         _caps(id) = cap'
         env.out.print(name+":received capability of "+id)
     fun ref delCap(id:String val) ?=>
@@ -125,7 +125,7 @@ class Node
     fun ref createCareT(id:String val,target':String val):Caretaker ref?=>
         env.out.print(name+":creating caretaker "+id+" for "+target')
         try
-            let cap = (getCap(target') as (Caretaker ref|Node ref))
+            let cap = (getCap(target') as (Caretaker ref|SimpleObj ref))
             let lockname: String val = id+"-lock"
             let lock:Lock ref = Lock.create() 
             let caretaker:Caretaker ref = Caretaker.create(cap,lock) 

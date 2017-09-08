@@ -6,10 +6,10 @@ actor Main
     new create(env':Env)=>
         env = env'
         env.out.print("---Initial Conditions---")
-        let alice: Node ref = Node.create(env,"alice")
-        let bob: Node ref = Node.create(env,"bob")
-        let carol: Node ref = Node.create(env,"carol")
-        let diane: Node ref = Node.create(env,"diane")
+        let alice: SimpleObj ref = SimpleObj.create(env,"alice")
+        let bob: SimpleObj ref = SimpleObj.create(env,"bob")
+        let carol: SimpleObj ref = SimpleObj.create(env,"carol")
+        let diane: SimpleObj ref = SimpleObj.create(env,"diane")
         try
         //initial conditions
         alice.recCap("bob",bob)
@@ -63,10 +63,10 @@ class Lock
         _state
 
 class Membrane 
-    let _target: (Node ref|Membrane ref)
+    let _target: (SimpleObj ref|Membrane ref)
     let _lock: Lock ref
     let _children: collections.Map[String val, Membrane ref] = _children.create()
-    new ref create(target':(Node ref|Membrane ref), lock':Lock ref)=>
+    new ref create(target':(SimpleObj ref|Membrane ref), lock':Lock ref)=>
         _target = target'
         _lock = lock'
     fun box _locked():Bool val=>
@@ -81,7 +81,7 @@ class Membrane
         else error end
     fun ref recProp(id:String val,prop:String val)=>
         if _locked() is false then _target.recProp(id,prop) end
-    fun ref getCap(id:String val): (Node ref|Lock ref|Membrane ref)?=>
+    fun ref getCap(id:String val): (SimpleObj ref|Lock ref|Membrane ref)?=>
         try
             if _locked() is false then _target.getCap(id) else error end
         else error end
@@ -89,12 +89,12 @@ class Membrane
         try
             if _locked() is false then _target.sendCap(id,rec) end
         else error end
-    fun ref recCap(id:String val, cap':(Node ref|Lock ref|Membrane ref))?=> //wrap capability parameter in method
+    fun ref recCap(id:String val, cap':(SimpleObj ref|Lock ref|Membrane ref))?=> //wrap capability parameter in method
     try
         if _locked() is false then 
         let newlock:Lock ref = Lock.create()
         _lock.addchild(id+"-lock",newlock)
-        let newMemb:Membrane ref = Membrane.create((cap' as (Node ref|Membrane ref)),newlock)
+        let newMemb:Membrane ref = Membrane.create((cap' as (SimpleObj ref|Membrane ref)),newlock)
         _children(id) = newMemb
         _target.recCap(id+"-M",newMemb) end
     else error end
@@ -107,10 +107,10 @@ class Membrane
             if _locked() is false then _target.createMemb(id,target) else error end
         else error end
             
-class Node
+class SimpleObj
     let env: Env
     let name: String
-    let _caps: collections.Map[String val, (Node ref|Lock ref|Membrane ref)] = _caps.create()
+    let _caps: collections.Map[String val, (SimpleObj ref|Lock ref|Membrane ref)] = _caps.create()
     let _props: collections.Map[String val, String val] = _props.create()
 
     new ref create(env':Env, name':String)=>
@@ -130,16 +130,16 @@ class Node
         try _props(id) else error end
     fun ref sendProp(id:String val,prop:String val,rec: String val)?=>
         env.out.print(name+":sending ("+id+" as "+prop+") to "+rec)
-        try (getCap(rec) as (Membrane ref|Node ref)).recProp(id,prop) else error end
+        try (getCap(rec) as (Membrane ref|SimpleObj ref)).recProp(id,prop) else error end
     fun ref recProp(id:String val,prop:String val) =>
         env.out.print(name+":"+id+" changed to "+prop)
         _props(id)=prop
-    fun ref getCap(id:String val): (Node ref|Lock ref|Membrane ref)?=>
+    fun ref getCap(id:String val): (SimpleObj ref|Lock ref|Membrane ref)?=>
         try _caps(id) else error end
     fun ref sendCap(id:String val, rec:String val)?=>
         env.out.print(name+":sending capability of "+id+" to "+rec)
-        try (getCap(rec) as (Membrane ref|Node ref)).recCap(id, getCap(id)) else error end
-    fun ref recCap(id:String val, cap':(Node ref|Lock ref|Membrane ref))=>
+        try (getCap(rec) as (Membrane ref|SimpleObj ref)).recCap(id, getCap(id)) else error end
+    fun ref recCap(id:String val, cap':(SimpleObj ref|Lock ref|Membrane ref))=>
         _caps(id) = cap'
         env.out.print(name+":received capability of "+id)
     fun ref delCap(id:String val) ?=>
@@ -147,7 +147,7 @@ class Node
     fun ref createMemb(id:String val,target':String val):Membrane ref?=>
         env.out.print(name+":creating membrane "+id+" for "+target')
         try
-            let cap = (getCap(target') as (Membrane ref|Node ref))
+            let cap = (getCap(target') as (Membrane ref|SimpleObj ref))
             let lockname:String val = id+"-lock"
             let lock:Lock ref = Lock.create()
             let membrane:Membrane ref = Membrane.create(cap,lock) 

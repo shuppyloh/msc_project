@@ -155,7 +155,7 @@
 \makeatother
 \renewcommand{\maketitlehookd}{%
 \begin{abstract}
-\noindent  We revisit the concepts of \textit{permission} and \textit{authority} in the works of Miller\cite{miller2006} and \linebreak Drossopoulou et al. \cite{drossopoulou2016}, and we contribute to the literature by proposing new formal definitions of permission and authority (MayAccess and MayCall predicates in our paper). We show how our definitions can be used to reason about object-to-object interactions, and in particular, cooperation between objects and protection of objects from unknown code. Another contribution we made is that we propose and show how the concept of domination over objects can be used to specify and reason about safe or vulnerable cooperation, which is novel but inspired by the work of Clarke et al. on ownership types \cite{clarke1998}. Our paper then show how using a mix of our proposed formalisations of permission, authority, domination, and Hoare logics, we can formally specify well-established Object-Capability (OCap) patterns in the form of \textit{OCap policies} \cite{drossopoulou2013,drossopoulou2014,drossopoulou2015,drossopoulou2015b}.  In particular, we reason about protecting the properties of nodes in a DOM Tree, inspired by the works of Maffeis et al.\cite{maffeis2010} and Devriese et al.\cite{devriese2016}, but we do so within the capability-safe language Pony \cite{clebsch2015}. We believe our methodology and specifications of OCap patterns are less complex than other methodologies in the literature\cite{devriese2016,swasey2017}, which will allow a programmer to reason convincingly how the use of attenuating objects in capability-safe languages can help to facilitate cooperation betweeen known and unknown code, while still preventing vulnerabilities by preserving desired properties in an open system. Lastly, we end our paper with some preliminary insights on thinking about security and risk in a non-OCap system, using the Ethereum\cite{wood2014} blockchain as a case study.\end{abstract}
+\noindent  We revisit the concepts of \textit{permission} and \textit{authority} in the works of Miller\cite{miller2006} and \linebreak Drossopoulou et al. \cite{drossopoulou2016}, and we contribute by proposing new formal definitions of permission and authority (MayAccess and MayCall predicates in our paper). Another contribution we made is that we propose and show how the concept of domination over objects can be used to reason about OCap policies, which is novel but inspired by the work of Clarke et al. on ownership types \cite{clarke1998}. We show how our definitions above can be used to reason about object-to-object interactions, and in particular, cooperation between objects and protection of objects from unknown code. Our paper then shows how the use of our concepts of permission, authority, and domination within extended Hoare logics can formally specify well-established Object-Capability (OCap) patterns, namely the DOM Tree pattern, Caretaker pattern and Membrane pattern, in the form of \textit{OCap policies} \cite{drossopoulou2013,drossopoulou2014,drossopoulou2015,drossopoulou2015b}.  In particular, we show how we can reason about protecting the properties of nodes in the DOM Tree pattern, which is inspired by the works of Maffeis et al.\cite{maffeis2010} and Devriese et al.\cite{devriese2016}, but we do so within our methodology and the capability-safe language Pony \cite{clebsch2015}. We believe our methodology and specifications of OCap patterns are less complex than other methodologies in the literature\cite{devriese2016,swasey2017}, which will allow a programmer to reason convincingly how the use of attenuating objects in capability-safe languages can help to facilitate cooperation betweeen known and unknown code, while still preventing vulnerabilities by preserving desired properties in an open system. Lastly, we end our paper with some preliminary insights on thinking about security and risk in a non-OCap system, using the Ethereum\cite{wood2014} blockchain as a case study.\end{abstract}
 }
 \begin{document}
 \let\sf\textsf
@@ -190,20 +190,21 @@ The power of distributed modern computing lies in facilitating cooperation betwe
 \item failure to defend against malicious execution of \textit{unknown} code components\end{itemize}
 \noindent These two issue are often closely intertwined in any system of execution that has both trusted and untrusted code components (the second issue is often a result of the first).\\
 
-It is therefore not surprising that \textit{thinking} about security while building a complex system of cooperation that involves the interplay between trusted(known) and untrusted(unknown) code components is extremely challenging to any programmer. To some programmers, security, is often treated as a \textit{separate} mental burden to be considered separately from the functionality of a system. In recent years the Object-Capability (OCap) model has received increasing attention as a compelling approach to building robust, distributed systems that promote what Miller\cite{miller2006} calls \textit{cooperation without vulnerability}. The OCap model attemps to address these two issues by alleviating security as a separate concern from the mind of the programmer. This is done through leveraging the object-oriented programming paradigm and imposing certain prohibitions or restrictions. Within the OCap literature, there are two central concepts that describe how objects interact: permission and authority. The OCap literature also features prominently how using an OCap system would accomplish cooperation without vulnerability through Object-Capability Patterns (OCap patterns). OCap patterns are important, because they demonstrate how objects can cooperate with unknown code while preserving desirable properties in a system.\\
+It is therefore not surprising that \textit{thinking} about security while building a complex system of cooperation that involves the interplay between trusted(known) and untrusted(unknown) code components is extremely challenging to any programmer. To some programmers, security, is often treated as a \textit{separate} mental burden to be considered separately from the functionality of a system. In recent years the Object-Capability (OCap) model has received increasing attention as a compelling approach to building robust, distributed systems that promote what Miller\cite{miller2006} calls \textit{cooperation without vulnerability}. The OCap model addresses these two issues by alleviating security as a separate concern from the mind of the programmer. This is done through leveraging the object-oriented programming paradigm and imposing certain prohibitions or restrictions. Within the OCap literature, there are two central concepts that describe how objects interact: permission and authority. The OCap literature also features prominently how using an OCap system would accomplish cooperation without vulnerability through Object-Capability Patterns (OCap patterns). OCap patterns are important, because they demonstrate how objects can cooperate with unknown code while preserving desirable properties in a system.\\
 \subsection{Our contributions}
-While there have been considerable work done on OCap patterns in programming languages \cite{miller2003b,miller2006,murray2010}, less work has been done on formally specifying them. The only works we know so far are \cite{drossopoulou2015b,devriese2016,swasey2017}, which are all very recent in the literature. Our paper builds on the works of \cite{drossopoulou2015b}, because we claim that the methodology of using OCap policies to specify OCap patterns to be intuitive and straightforward. While they may seem less sophisticated than the methodologies in other works, we believe they are powerful enough to reason convincingly about the interactions between trusted code and code of unknown provenance. To formally specify OCap patterns in the style of OCap policies, our paper contributes to the literature by proposing formal predicates for permission and authority that describe access dynamics between objects. Miller first proposed the concepts of permission and authority in his PhD thesis\cite{miller2006}, following which the formal definitions of these concepts were proposed and refined in the work of Drossopoulou et al. \cite{drossopoulou2016}. Our paper defines permission and authority in a formal way that is different from the aforementioned works, but we generally adopt the same informal meanings (that having permission means the right to invoke an object's behaviours, and authority to mean the ability to cause effects). More precisely, our paper defines \textit{permission} as having the reference of another object (right to invoke that object's behaviours), either directly or indirectly---through multiple object reference(s)---and either currently or eventually---in some current or future state of the system; and defines \textit{authority} to mean being \textit{able} to invoke an object's behaviours; i.e. we distinguish between having the \textit{right to do} something (permission) and \textit{being able to do} something (authority)\footnote{An anology would be having the right to perform an impossible task does not imply the task becomes possible.}. Furthermore, our paper implicitly treats invoking behaviours of objects as 'effects' in the system. We claim that these insights are novel and our motivation for defining them can be found in \cref{sec:permauth}.\\
+While there have been considerable work on OCap patterns in programming languages \cite{miller2003b,miller2006,murray2010,drossopoulou2014b}, less work has been done on formally specifying them. The only works we know so far are \cite{drossopoulou2015b,devriese2016,swasey2017}, which are all very recent in the literature. Our paper builds on the works of \cite{drossopoulou2015b}, but we propose a different methodology for specifying OCap patterns which we claim is intuitive and straightforward. While ours may seem less sophisticated than the methodologies in other works, we believe that ours are powerful enough to reason convincingly about the interactions between trusted code and code of unknown provenance.\\
 
-To put our formal definitions of permission and authority in practice and demonstrate their usefulness, we further propose the novel use of the concept of domination over objects that is inspired by the works of \cite{clarke1998} on ownership types. Our domination predicate describes a special set of objects that dominate a particular object---all permissions to use the particular object have to involve the permission of a member of the dominating set, and all authorities have to involve the authority of a member of the dominating set.\\
+To formally specify OCap patterns in the style of OCap policies, our paper contributes to the literature by proposing formal predicates for permission and authority that describe dynamic access between objects. Miller first proposed the concepts of permission and authority in his PhD thesis\cite{miller2006}, following which the formal definitions of these concepts were proposed and refined in the work of Drossopoulou et al. \cite{drossopoulou2016}. Our paper defines permission and authority in a formal way that is different from the aforementioned works, but we generally adopt similar intuitions (that having permission means the right to invoke an object's behaviours, and authority to mean the ability to cause effects). More precisely, our paper defines \textit{permission} as having the reference of another object (right to invoke that object's behaviours), either directly or indirectly---through multiple object reference(s)---and either currently or eventually---in some current or future state of the system; and defines \textit{authority} to mean being \textit{able} to invoke an object's behaviours; i.e. we distinguish between having the \textit{right to do} something (permission) and \textit{being able to do} something (authority)\footnote{An analogy would be having the right to perform an impossible task does not imply the task becomes possible.}. Our paper also implicitly treats invoking behaviours of objects as 'effects' in the system. We claim that these insights are novel and our motivation for defining them can be found in \cref{sec:permauth}.\\
 
-With our formal definitions of permission, authority, and domination, our paper then argues in \cref{sec:ocapreasoning} on how we can use them to reason and distinguish concepts of \textit{isolation}, \textit{cooperation}, \textit{vulnerability} and \textit{protection}. We claim that our framework allows one to understand and reason about these concepts in a highly straightforward and intuitive way without treating security as a separate burden from the functionality of the system, which we hope would encourage programmers to seek the use of the object-capability model to build robust and secure systems.\\
+We further propose the novel use of the concept of domination over objects that is inspired by the works of \cite{clarke1998} on ownership types. Our domination predicate describes a special set of objects that dominate a particular object---all permissions to use the particular object have to involve the permission of a member of the dominating set, and all authorities have to involve the authority of a member of the dominating set.\\
 
+With our formal definitions of permission, authority, and domination, our paper then argues in \cref{sec:ocapreasoning} on how we can use them to reason and distinguish concepts of \textit{isolation}, \textit{cooperation}, \textit{vulnerability}, \textit{safety} and \textit{protection}. We claim that our framework allows one to understand and reason about these concepts in a highly straightforward and intuitive way without treating security as a separate burden from the functionality of the system, which we hope would encourage programmers to seek the use of the object-capability model to build robust and secure systems.\\
 
-
-To show this in practice, our paper provides an illustration of three OCap patterns found in \cref{sec:figdom,sec:figcaretaker,sec:figmem}, and we focus only on providing the OCap policy specifications for the DOM Tree pattern in \cref{sec:dompolicies}. We choose the DOM Tree pattern because we are convinced of the importance of reasoning about unknown code using the object-capability framework in the web security space, where guest/unknown code (such as third party scripted advertising or widgets) are pervasive in the web today (details can be found in the work by Maffeis et al.\cite{maffeis2010}). We show how using our OCap policies, we can specify the preservation of properties of nodes, in the presence of unknown code execution, in \cref{sec:treereasoning}. Lastly, in \cref{sec:ethereum}, we offer some preliminary insights on the security properties of smart contracts on the Ethereum blockchain platform that has experienced explosive growth in recent years, and we recognise that further work has to be done in the field of smart contracts on the blockchain technology.
+To put our formal definitions of permission, authority, and domination in practice and demonstrate their usefulness, 
+our paper provides an illustration of three OCap patterns, DOM Tree pattern, Caretaker pattern, and Membrane pattern, which can be found respectively in \cref{sec:figdom,sec:figcaretaker,sec:figmem}. Our paper also provides the corresponding OCap policies based on our formal definitions for these three patterns. In \cref{sec:treereasoning}, we choose the Dom Tree pattern as an example to demonstrate how the DOM Tree policies help us to reason comfortably about the preservation of properties of nodes in the presence of unknown code execution. A motivation for using the DOM Tree pattern is how guest/unknown code (such as third party scripted advertising or widgets) are becoming more pervasive in the web today (where details on reasoning about them within the object-capability framework can be found in the work by Maffeis et al.\cite{maffeis2010}). Lastly, in \cref{sec:ethereum}, we offer some preliminary insights on the security properties of smart contracts on the Ethereum blockchain platform that has experienced explosive growth in recent years, and we recognise that further work has to be done in the field of smart contracts on the blockchain technology.
 
 \subsection{Overview of Paper}
-In our paper, we first give an overview background history on the OCap model in \cref{sec:ocapmodel}. Readers familiar with the object-capability model and its languages are encouraged to skim through this section. In \cref{sec:specs}, we seek to formally specify the definitions of permission, authority and domination, and we use our specifications to describe and reason how objects interact with each other. Our formal specifications are broad enough to reason in general about how two objects interact in our small specification language. That said, there are benefits to using these concepts to reason within an OCap system, which we demonstrate in \cref{sec:ocapreasoning}, because the restrictions placed by OCap languages or what we call capability-safe languages allow us to enforce protection of objects more easily. We further solidify how our methodology can be used to reason convincingly in an OCap system by applying it on a DOM Tree pattern within an OCap framework, in \cref{sec:ocappatterns}. We end off with some preliminary insights on Ethereum in \cref{sec:ethereum}.
+We first give an overview background history on the OCap model in \cref{sec:ocapmodel}. Readers familiar with the object-capability model and its languages are encouraged to skim through this section. In \cref{sec:specs}, we formally specify the definitions of permission, authority and domination, and we use our specifications to describe and reason how objects interact with each other. Our formal specifications are broad enough to reason in general about how two objects interact in our small specification language. That said, there are benefits to using these concepts to reason within an OCap system, which we demonstrate in \cref{sec:ocapreasoning}, because the restrictions placed by OCap languages or what we call capability-safe languages allow us to enforce protection of objects more easily. We further solidify how our methodology can be used to reason convincingly in an OCap system by applying it on a DOM Tree pattern within an OCap framework, in \cref{sec:ocappatterns}. We end the paper with some preliminary insights on Ethereum in \cref{sec:ethereum}.
 %----------------------------------------------------------------------------------------
 %   OCap Model
 %----------------------------------------------------------------------------------------
@@ -251,12 +252,12 @@ Swasey et al.\cite{swasey2017} present a logics for OCP called OCPL, a formal sy
 %----------------------------------------------------------------------------------------
 \newpage
 \section{Formal specifications}\label{sec:specs}
-In this section we describe a small object-oriented language in \cref{sec:speclang} and define predicates that allow us to specify object-capability policies in \cref{sec:permauth}. For our language, we use the definitions of modules, classes, runtime state, interpretation, execution and arising configurations from the specification language in the appendix of \cite{drossopoulou2015b}. To express more precisely how an object can interact with another object, we use the ideas of permission and authority in Miller's\cite{miller2006} and Drossopoulou et al.'s\cite{drossopoulou2016} works. In their papers and our paper, we generally try to capture the informal meaning of:
+In this section we describe a small object-oriented language in \cref{sec:speclang} and define predicates that allow us to specify object-capability policies in \cref{sec:permauth}. For our language, we use the definitions of modules, classes, runtime state, interpretation, execution and arising configurations from the specification language in the appendix of \cite{drossopoulou2015b}. To express more precisely how an object can interact with another object, we give formal definitions to the ideas of permission and authority which were studied but not formally defined in \cite{miller2006}. They were later studied in several ways, e.g. in the work by Maffeis et al.\cite{maffeis2010}. Our formal definition is based on but not identical to that from  the work by Drossopoulou et al.'s\cite{drossopoulou2016}. In their papers and our paper, we generally try to capture the intuition of:
 \begin{itemize}
 \item permission: access right of an object to invoke a behaviour of an object
 \item authority: ability to cause effects
 \end{itemize}
-In the approach of our paper however, we contribute to the literature by taking a novel approach in formally defining both permission and authority, though we argue they generally capture the same informal meanings. For permission, we have four different modes permissions specified by four MayAccess predicates. Given a module M and state \losigma,:
+In this work however, we contribute to the literature by taking a novel approach in formally defining both permission and authority. For permission, we have four different modes permissions specified by four MayAccess predicates. Given a module M and state \losigma,:
 \begin{tabbing}
 MayAccess$^{Dir,Now}$(o,o$'$): \=o has an object reference of o$'$\\
 MayAccess$^{Ind,Now}$(o,o$'$): o contains a reference that points to an object that has a reference\\
@@ -266,12 +267,13 @@ MayAccess$^{Ind,Eve}$(o,o$'$): there will be some eventual state \losigma$'$ ari
 \end{tabbing}
 For authority, we propose a new MayCall predicate that deviates from the MayAffect predicate proposed in Drossopoulou et al.\cite{drossopoulou2016}. While their MayAffect predicate captures the idea of a field of an object being modified, our MayCall predicate is much weaker ---we mean the ability to invoke a method of an object. Therefore implicitly, we consider method invocation as an effect in the system. Given a module M and state \losigma,:
 \begin{tabbing}
-MayCall(o,o$'$): \=there exist a method in o that can call a method in o$'$,\\ \> such that there will be some eventual state \losigma$'$ arising from \losigma,\\ \> where the receiver in the stack has transitioned from o in \losigma, to o$'$ in \losigma$'$\\
+MayCall(o,o$'$): \=there exists a method in o that can call a method in o$'$,\\ \> such that there will be some eventual state \losigma$'$ arising from \losigma,\\ \> where the receiver in the stack has transitioned from o in \losigma, to o$'$ in \losigma$'$\\
 \end{tabbing}
 
 We further elaborate these predicates in \cref{MayAccess} and \cref{MayCall}.
 \subsection{Specification Language}\label{sec:speclang}
-In our small specification language, we briefly describe the defintions of module, class, runtime state, interpretation, execution, arising configurations, and assertion.
+In our small specification language, we briefly describe the definitions of module, class, runtime state, interpretation, execution, arising configurations, and assertion. All definitions in this section are repeated from the appendix of \cite{drossopoulou2015b} for the reader's convenience. Some parts from \cite{drossopoulou2015b} have also been included in the appendix of this paper. \\
+
 \textbf{Module:}\\
 A module maps class identifiers to class descriptions:\\
 \begin{logic}
@@ -280,7 +282,7 @@ M \loin\ Module = ClassId \locup\ SpecId\\\ablock\qquad\qquad\quad $\rightarrow$
 \end{logic}\\
 
 \textbf{Class:}\\
-Class definitions describe how a class contributes to the runtime behaviour of a program for which we use its field and method declarations. We define method bodies as consisting a sequences of statements; these statements can be field read or internal field assignments (only allowed if the object is \texttt{this}), conditionals, and method calls. We also define all classes to be private which mean only objects belonging to class C may construct objects of class C.\\
+Class definitions describe how a class contributes to the runtime behaviour of a program for which we use its field and method declarations. We define method bodies as consisting a sequences of statements; these statements can be field read or internal field assignments (only allowed if the object is \texttt{this}), conditionals, and method calls.\\
 
 \begin{logic}
 ClassDescr\quad\=:\=:= [\textbf{private}] \textbf{class} \=ClassId\\
@@ -307,7 +309,8 @@ Note that we work with all fields being private in our model - this restricts ea
 \textbf{Runtime state:}\\
 \losigma\ consists of a stack frame \lophi, and a heap \lochi. A stack frame is a mapping from receiver (this) to its address, and from the local variables (VarId) and parameters (ParId) to their values. Values are integers, the booleans true or false, addresses, or null. The heap maps addresses to objects. Objects are tuples consisting of the class of the object, and a mapping from field identifiers onto values.\\
 
- \begin{logic}
+\begin{logic}
+\textit{Runtime State definition}\\
 \losigma\ \loin\ state \quad\= = frame \lotimes\ heap \\
 \lophi \loin\ frame \>= StackId $\rightarrow$ val \\
 \lochi \loin\ heap \>= addr $\rightarrow$ object \\
@@ -350,6 +353,8 @@ Execution uses module M, and maps a runtime state \losigma\ and statements stmts
 \quad \loleadsto \quad : Module $\times$ state $\times$ Rhs $\rightarrow$ heap $\times$ val\\
 \end{logic}
 
+Further details can be found in appendix \cref{app:execution}.\\
+
 \textbf{Arising Configurations:}\\
 We define Arising(M, \losigma) as the set of runtime configurations which may be reached during execution of some initial context (\losigma$_0$, stmts$_0$). The mappings of Init and Arising are as follows:\\
 
@@ -374,6 +379,7 @@ Reach : Module $\times$ state $\times$ Stmts\\
 \end{logic}
 
 The set Reach(M,\losigma,stmts) collects all configurations reachable during execution of \losigma,stmts. Note that the function Reach(M,\losigma,stmts) is defined even when execution diverges so it may be an infinite set. We therefore can give meaning to capability policies without requiring termination.\\
+The definition of Reach can be found in appendix \cref{app:reach}.\\
 
 \textbf{Assertion}\\
 The syntax of assertion can be found in the works of \cite{drossopoulou2015b}, where we have placed the relevant section in Appendix \cref{app:assertion} of our paper , and is more or less as expected. Validity of assertion has the shape:\\
@@ -384,7 +390,7 @@ M,\losigma\ \loturns\ A\\
 
 and holds in context of a module \sf{M} and runtime configuration \sf{\losigma}, where more details can be found in the mentioned appendix section above.\\
 
-We say that a class \sf{C} satisfies an assertion \sf{A} in the context of a module \sf{M}, if in all runtime configuration \losigma$'$ arising from execution of any module \sf{M$'$} linked with module \sf{M}, all objects of class \sf{C} satisfies \sf{A}:\\
+We say that a class \sf{C} satisfies an assertion \sf{A} in the context of a module \sf{M}, if in all runtime configuration \losigma$'$ arising from execution of any module \sf{M$'$} linked with module \sf{M}, all objects of class \sf{C} satisfy \sf{A}:\\
 
 \begin{logic}
 M \loturns\ C:A \loiff\ \loforall M$'$,\losigma\loin Arising(M$*$M$'$,\losigma). [ M$*$M$'$,\losigma\ \loturns\ x:C \loimplies A[x/this] ]\\
@@ -410,21 +416,20 @@ and are general enough to describe generic object-oriented systems:
 
 M,\losigma\ \loturns\ \=MayAccess$^{Dir,Now}$(x,e) \loiff \\
 \>\loexists f. \loexec{x.f}{\losigma} = \loexec{e}{\losigma}
-\loor \\
-\> \loexec{\texttt{this}}{\losigma} = \loexec{x}{\losigma} \loand\ \loexists y. \loexec{y}{\losigma} = \loexec{e}{\losigma})\\
+\loor\
+\loexec{\texttt{this}}{\losigma} = \loexec{x}{\losigma} \loand\ \loexists y. \loexec{y}{\losigma} = \loexec{e}{\losigma}\\
 \\
  M,\losigma\ \loturns\ \=MayAccess$^{Dir,Eve}$(x,e) \loiff \\
-\>\loexists \losigma$'$ \loin Arising(M,\losigma).\\
-\>M,\losigma$'$\ \loturns\ MayAccess$^{Dir,Now}$(x,e)\\
+\>\loexists \losigma$'$ \loin Arising(M,\losigma).
+M,\losigma$'$\ \loturns\ MayAccess$^{Dir,Now}$(x,e)\\
 \\
 M,\losigma\ \loturns\ \=MayAccess$^{Ind,Now}$(x,e) \loiff \\
 \>\loexists \loconj{f}. \loexec{x.\loconj{f}}{\losigma} = \loexec{e}{\losigma}
-\loor \\
-\> \loexec{\texttt{this}}{\losigma} = \loexec{x}{\losigma} \loand\ \loexists y. \loexec{y.\loconj{f}}{\losigma} = \loexec{e}{\losigma})\\
+\loor\
+\loexec{\texttt{this}}{\losigma} = \loexec{x}{\losigma} \loand\ \loexists y. \loexec{y.\loconj{f}}{\losigma} = \loexec{e}{\losigma}\\
 \\
 M,\losigma\ \loturns\ \=MayAccess$^{Ind,Eve}$(x,e) \loiff \\
-\>\loexists \losigma$'$ \loin Arising(M,\losigma).\\
-\>M,\losigma$'$\ \loturns\ MayAccess$^{Ind,Now}$(x,e)\\
+\>\loexists \losigma$'$ \loin Arising(M,\losigma). M,\losigma$'$\ \loturns\ MayAccess$^{Ind,Now}$(x,e)\\
 \hr
 \end{logic}
 
@@ -432,7 +437,7 @@ where, we say MayAccess$^{Dir,Now}$(x,e) holds \lotiff\ in some current state \l
 
 Note that MayAccess$^{\_,Now}$ holds imply MayAccess$^{\_,Eve}$ holds, since an eventual state \losigma$'$ that arises from \losigma\, can refer to \losigma, and therefore, the 'now' definitions implies and are stronger than the 'eventual' definitions. Also since a series of fields \loconj{f}\ can mean a singular field f, MayAccess$^{Dir,\_}$ holds imply MayAccess$^{Ind,\_}$ holds, and therefore the 'direct' definitions are stronger than the 'indirect' definitions. \\
 \begin{table}[htb]
-\caption{MayAccess Relations}\label{tab:accessrelations}
+\caption{MayAccess Relations - Observations}\label{tab:accessrelations}
 \centering
 \begin{tabular*}{0.5\linewidth}{c|ccc}\toprule
 & \bf Now & & \bf Eventually\\
@@ -463,30 +468,18 @@ where we say MayCall(x,e) holds \lotiff\ we have x as a receiver in some state \
 \hr\\
 \emp{Definition---\emp{[MayAffect from Drossopoulou et al.\cite{drossopoulou2016}]}}\\
 M,\losigma\ \loturns\ \=MayAffect(x,e) if there exists a method \sf{m}, argument(s) \loconj{a}, state \losigma', such that:\\
-\ablock M,\losigma\ \=e.m(\loconj{a}) \loleadsto\ \losigma', and\\
-\>\loexec{e}{M,\losigma} \loneq\ \loexec{e$'$}{M,\losigma$'$}\\
+\ablock M,\losigma\ \=e.m(\loconj{a}) \loleadsto\ \losigma', and \loexec{e}{M,\losigma} \loneq\ \loexec{e$'$}{M,\losigma$'$}\\
 \hr
 \end{logic}
 
 
 \textbf{Motivation for MayCall:} The motivation for defining authority as MayCall in our paper is that we would like to describe a \textit{chain} of authority between objects, without needing objects in such a chain to necessarily modify the fields of other objects in the chain. In other words, when object A wants to use object B to modify a field in C but can only do so through object B, we want to express that we can deny A from modifying C either by denying A from calling B, or deny B from calling C. Note that object A does not need to be able to modify the fields of B to eventually modify the state of C. Hence, the MayAffect predicate used in \cite{drossopoulou2016} is too strong to decompose a long chain of authority into smaller object-to-object authorities.\\
 
-\begin{logic}
-\hr\\
-\emp{Lemma---[Object as receiver requires method invocation]}\\
-M,\losigma\ \loturns\ \=\losigma(this) = \loexec{o}{\losigma}\loimplies \\
-\> \loexists \losigma$'$,m,\loconj{a}. [ M,\losigma$'$, o.m(\loconj{a}) \loleadsto\ \losigma\ ]\\
-\hr
-\end{logic}
-
-We make clear that for an object to be a receiver in a particular state \losigma, we require a method to exist in the object in a prior state \losigma$'$ that upon invocation can lead to state \losigma. This follows from our definition of execution.\\
-
-Our MayCall(o,o$'$) predicate however, is not concerned whether or not the state o$'$ is modified ---the fact that a method in o$'$ can be eventually invoked by o is good enough grounds for us to mean that o has authority of o$'$. Our justification is that in the object-oriented paradigm, programmers almost always enforce security of a sensitive field in a protected object to be declared private, and define some public method in the object that can modify the concerned private field based on some condition. Hence, the question of whether an \textit{untrusted} object can modify a private field in an object \sf{o$'$} can be expressed as a question of whether the untrusted object can invoke a method of \sf{o$'$}. Given our definitions of MayCall(o,o$'$), it follows that a necessary condition for modification of a private field in o$'$ is the invocation of a method of o$'$. Proving the falsity of our MayCall(o,o$'$) predicate is therefore sufficient to prove that for a field \sf{f} in o$'$, MayAffect(o,o$'$.f) does not hold.\\
+Our MayCall(o,o$'$) predicate is not concerned whether or not the state of o$'$ is modified ---the fact that a method in o$'$ can be eventually invoked by o is good enough grounds for us to say that o has authority of o$'$. Our justification is that in the object-oriented paradigm, programmers almost always enforce security of a sensitive field in a protected object to be declared private, and define some public method in the object that can modify the concerned private field based on some condition. Hence, the question of whether an \textit{untrusted} object can modify a private field in an object \sf{o$'$} can be expressed as a question of whether the untrusted object can invoke a method of \sf{o$'$}. Given our definitions of MayCall(o,o$'$), it follows that a necessary condition for modification of a private field in o$'$ is the invocation of a method of o$'$. Proving the falsity of our MayCall(o,o$'$) predicate is therefore sufficient to prove that for a field \sf{f} in o$'$, MayAffect(o,o$'$.f) does not hold.\\
 \begin{logic}
 \hr\\
 \emp{Lemma---[Field Modification Requires Authority]}\\
-M,\losigma\ \loturns\ \loforall \losigma$'$,f. [\=\losigma$'$\loin Arising(M,\losigma) \loand\ \loexec{o$'$.f}{\losigma$'$}\loneq\loexec{o$'$.f}{\losigma}\loimplies \\
-\>\loexists o. M,\losigma\ \loturns\ MayCall(o,o$'$) ]\\
+\loforall \losigma$'$,f. [\=\losigma$'$\loin Arising(M,\losigma) \loand\ \loexec{o$'$.f}{\losigma$'$}\loneq\loexec{o$'$.f}{\losigma}\loimplies \loexists o. M,\losigma\ \loturns\ MayCall(o,o$'$) ]\\
 \hr
 \end{logic}
 
@@ -506,12 +499,12 @@ M,\losigma\ \loturns\ \=Dom(S,x) \loiff \\
 The usefulness of domination will be made more clear in the next section where we argue about cooperation without vulnerability. The power of having such a predicate will also be demonstrated in \cref{sec:ocappatterns}, where we show how attenuating objects that is meant to protect an object o can ensure certain properties of the system under unknown code execution.\\
 \section{Reasoning in an OCap System}\label{sec:ocapreasoning}
 
-In this section, we formally describe the ideas of \textit{isolation} and \textit{cooperation}, and how \textit{cooperation} can either be vulnerable or protected, within the OCap system. We use the word \textit{capability} (of an object), interchangeably with reference (of an object), to represent that both object reference and the right to use the object reference are indistinguishable in OCap; i.e., there is no global ambient authority to prevent an object from using another object reference. Given our 4 formal definitions of \textit{permission}, it follows that o has different kinds of permission of o$'$ depending on whether o has a direct or indirect capability of o$'$, and whether we are arguing about a current or eventual state of the system. However, if we were to use \textit{our} formal definition of \textit{authority} (causing effects where effects are method invocations), we cannot say that an object reference embodies authority - we elaborate more in \cref{sec:isolation and cooperation}. We use the word \textit{path} interchangeably with indirect capability or permission, to emphasise that an object o need not necessarily require the direct capability of o$'$ to invoke the behaviours of o$'$---invocation of o$'$ can be done by o through a network of paths consisting of other object capabilities.\\
+In this section, we formally describe the ideas of \textit{isolation} and \textit{cooperation}, and how \textit{cooperation} can either be vulnerable or protected, within the OCap system. We use the word \textit{capability} (of an object), interchangeably with reference (of an object), to represent that object reference and the right to use the object reference are indistinguishable in OCap; i.e., there is no global ambient authority to prevent an object from using another object reference. Given our 4 formal definitions of \textit{permission}, it follows that o has different kinds of permission of o$'$ depending on whether o has a direct or indirect capability of o$'$, and whether we are arguing about a current or eventual state of the system. However, if we were to use \textit{our} formal definition of \textit{authority} (causing effects where effects are method invocations), we would not be able to say that an object reference embodies authority - we elaborate more in \cref{sec:isolation and cooperation}. We use the word \textit{path} interchangeably with indirect capability or permission, to emphasise that an object o need not necessarily require the direct capability of o$'$ to invoke the behaviours of o$'$---invocation of o$'$ can be done by o through a network of paths consisting of other object capabilities.\\
 
 In \cref{sec:epc} we propose a lemma that states that under an OCap system, we can reason about eventual indirect permission, from a current permission configuration of an initial closed system\footnote{We require a closed system because unknown object or code might introduce capabilities of objects of the system that the unknown object or code might already have.}. That is, given a system where we know the entire system's present reference graph, OCap rules confine the possible reference graphs that can be born eventually from the present reference graph. Next in \cref{sec:isolation and cooperation}, we first explain that objects require permission (direct capabilities or a chain of capabilities) to communicate, i.e. permission forms the necessary condition for authority. We also reason about \textit{isolation} and \textit{cooperation} using our formal definition of permission. Following which in \cref{sec:vulnerability and protection}, we expand the concept of \textit{cooperation} to include cooperation that is vulnerable, and cooperation that is protected, i.e. \textit{vulnerability} and \textit{protection}. \textit{Protection} and \textit{vulnerability} are built on our formal definitions of authority and domination.
 
 \subsection{Eventual permission from present permission configuration}\label{sec:epc}
-Here, we propose a lemma \textsc{epc} that states how eventual permission can be born from a constellation of direct permissions within an OCap system.
+Here, we propose a lemma that states how eventual permission can be born from a constellation of direct permissions within an OCap system.
 
 \begin{logic}
 \hr\\
@@ -526,7 +519,7 @@ M,\losigma\ \loturns\ \=MayAccess$^{Ind,Eve}$(o,o$'$)\\
 \hr
 \end{logic}
 
-\textsc{Lemma epc} has the meaning that if an object o has an eventual path to o$'$ in some arising state \losigma$'$, then there must exist an object x that has an eventual path to o$'$, and there must exist a way for o to have a path to x in \losigma$'$. Object o either must already have a path to x in \losigma, or that it must be able to receive the capability of x through introduction by x in \losigma. \textsc{epc} is actually a formal representation of the well-known OCap idiom of \textit{connectivity begets connectivity}:
+Lemma \textsc{epc} guarantees that if an object o has an eventual path to o$'$ in some arising state \losigma$'$, then there must exist an object x that has an eventual path to o$'$, and there must exist a way for o to have a path to x in \losigma$'$. Object o either must already have a path to x in \losigma, or that it must be able to receive the capability of x through introduction by x in \losigma. \textsc{epc} is actually a formal representation of the well-known OCap idiom of \textit{connectivity begets connectivity}:
 
 \begin{itemize}
 \item \textbf{Initial Conditions or Endowment:} o has the capability of o$'$ in \losigma\ due to initiate conditions or endowment in the system, therefore x refers to o$'$
@@ -558,48 +551,53 @@ We show an example below using \textsc{Lemma epc} with 3 objects o, y, o$'$. Let
 Note how, these 6 configurations are direct capability configurations at \losigma, but allows us to reason about whether a potential path from o to o$'$ can exist in some arising state \losigma$'$ from \losigma.\\
 
 \subsection{Isolation and Cooperation}\label{sec:isolation and cooperation}
-In this section, we reason about isolation and cooperation using our formal definition of permission and authority. What exactly is object isolation when we say that object o$'$ is isolated from object o, and what exactly is cooperation?\\
-
-We say isolation of o$'$ from o is simply that there is no eventual directed path from o to o$'$:\\
-
-\begin{logic}
-\emp{Isolation of o$'$ from o:}\\
-\loturns\ \loneg MayAccess$^{Ind,Eve}$(o,o$'$)\\
-\end{logic}
-
-Given \textsc{lemma epc}, we can enforce isolation of o$'$ from o given the present path configuration of a system at \losigma, and when the closed system is eventually opened such that an unknown object has permission and authority of \textit{only} object o in some arising state \losigma', we know that the unknown code will not have permission of o$'$, since o is isolated from o$'$.\\
-
-We know from contraposition of the corollary from our definitions of permission and authority:\\
+In this section, we reason about isolation and cooperation using our formal definition of permission and authority. Before we define isolation and cooperation, we first propose a lemma on the relationship between permission and authority:\\
 
 \begin{logic}
 \hr\\
-\emp{Corollary---[Permission(Indirect,Eventual) is necessary for Authority]}\\
-M,\losigma\ \loturns\
-\= MayCall(o,o$'$) \loimplies \\
-\> MayAccess$^{Ind,Eve}$(o,o$'$)\\
+\emp{Lemma---[Permission(Indirect,Eventual) is necessary for Authority]}\\
+M,\losigma\ \loturns\ MayCall(o,o$'$) \loimplies\ MayAccess$^{Ind,Eve}$(o,o$'$)\\
 \hr
 \end{logic}
 
-Therefore,\\
+What exactly is object isolation when we say that object o$'$ is isolated from object o, and what exactly is cooperation? We say isolation of o$'$ from o is simply that there is no eventual directed path from o to o$'$:\\
 
 \begin{logic}
+\hr\\
+\emp{Definition---[Isolation of o$'$ from o]}\\
+M,\losigma\ \loturns\ Isolated(o,o$'$) \loiff\ \loneg MayAccess$^{Ind,Eve}$(o,o$'$)\\
+\hr
+\end{logic}
+
+Given lemma \textsc{epc}, we can enforce isolation of o$'$ from o given the present path configuration of a system at \losigma, and when the closed system is eventually opened such that an unknown object has permission and authority of \textit{only} object o in some arising state \losigma', we know that the unknown code will not have permission of o$'$, since o is isolated from o$'$.\\
+
+From the contraposition of the lemma [Permission is necessary for Authority], we have the corollary:\\
+
+\begin{logic}
+\hr\\
 \emp{Isolation implies no authority}\\
-\loturns\ \loneg MayAccess$^{Ind,Eve}$(o,o$'$) \loimplies \loneg Maycall(o,o$'$)\\
+M,\losigma\ \loturns\ \loneg MayAccess$^{Ind,Eve}$(o,o$'$) \loimplies\ M,\losigma\ \loturns\ \loneg Maycall(o,o$'$)\\
+\hr
 \end{logic}
 
 
-It is good to know we can guarantee the internal state and behaviour of an object o$'$ in the presence of unknown code on object o through isolation, but in practice this is not entirely useful. The quintessential question in OCap systems is whether we can allow cooperation without vulnerability. What then is cooperation?\\
+Therefore, it is good to know we can guarantee the internal state and behaviour of an object o$'$ in the presence of unknown code on object o through isolation, but in practice this is not entirely useful. The quintessential question in OCap systems is whether we can allow cooperation without vulnerability. What then is cooperation?\\
 
-We say cooperation between two objects o and o$'$ is simply that o has permission of o$'$:\\
+We say \textit{directed} cooperation from o to o$'$ is simply that o has permission of o$'$:\\
 
 \begin{logic}
-\emp{Cooperation between o and o$'$ (o $\rightarrow$ o$'$):}\\
-\loturns\ MayAccess$^{Ind,Eve}$(o,o$'$)\\
+\hr\\
+\emp{Definition---[Cooperation (o $\rightarrow$ o$'$)]:}\\
+M,\losigma\ \loturns\ Cooperation(o,o$'$) \loiff\ M,\losigma\ \loturns\ MayAccess$^{Ind,Eve}$(o,o$'$)\\
+\hr
 \end{logic}
 
+Furthermore, we make the observation between cooperation and authority that:\\
 \begin{logic}
-\emp{Cooperation is necessary but not sufficient for authority:}\\
+\hr\\
+\emp{Observation---[Cooperation is necessary but not sufficient for authority]}\\
 \loturns\ MayAccess$^{Ind,Eve}$(o,o$'$) \lonimplies\ MayCall(o,o$'$)\\
+\hr
 \end{logic} 
 
 We provide some analogies as to why cooperation does not imply authority. Object o can have the reference(capability) of o$'$, and hence there is cooperation, but o contains no methods that can invoke(use) the capability of o$'$, and thus o has the capability of o$'$ but not the authority of o$'$. Another analogy, from the other viewpoint of o$'$, would be that o$'$ has no available methods that can be invoked by o ---this can happen if o has no methods, or o only contains private methods or methods that are restricted for objects inherited from the same class as o of which o$'$ is not.\\
@@ -610,24 +608,24 @@ The problem with cooperation is when we know o$'$ has exposed methods (or public
 \begin{itemize}\item We assume that object o$'$ will always have some exposed public method for the rest of this section, and is the object of interest that we want to protect.\end{itemize}
 For the concepts of vulnerability and protection, our arguments are based primarily on whether the source object is trusted (known) or untrusted (unknown).\\
 
-While we can always protect o$'$ through isolation from o (o will have no paths to o$'$), what is probably more useful is whether cooperation between o$'$ and o, is possible in a \textit{protected way}. What does that mean? Notice that if we \textit{know} or \textit{trust} the code of o, then \textbf{cooperation can actually be safe}, even if o contains methods that can eventually invoke behaviours of o$'$.\\
+While we can always protect o$'$ through isolation from o (o will have no paths to o$'$), what is probably more useful is whether cooperation between o$'$ and o, is possible in a \textit{protected way}. What does that mean? Notice that if we \textit{know} or \textit{trust} the code of o, then \textbf{cooperation can actually be safe}, even if o contains methods that can eventually invoke behaviours of o$'$. Suppose we have a class KnownObj which we have knowledge of and can trust:\\
 
 \begin{logic}
 \hr\\
-\emp{Lemma---[Known-Safe cooperation]}\\
-o:KnownObj \loand\ o$'$:ExposedObj \loand\ MayAccess$^{Ind,Eve}$(o,o$'$)\\
+\emp{Definition---[Safe cooperation]}\\
+M,\losigma\ \loturns\ SafeCooperation(o,o$'$) \loiff\ o:KnownObj \loand\ Cooperation(o,o$'$)\\
 \hr
 \end{logic}
 
 
-Then regardless of whether MayCall(o,o$'$) holds or not, since we know or trust the code of o, we know that o will not do something that will lead to undesirable method invocations of o$'$.\\
+Then regardless of whether MayCall(o,o$'$) holds or not, since we know or trust the code of o, we know that o will not do something that will lead to undesirable effects on o$'$.\\
 
-However, if we have another object o* that is of unknown provenance such that:\\
+However, if we have another object o* that is of unknown provenance where o* belongs to a class UnknownObj which we do not have code knowledge of, then:\\
 
 \begin{logic}
 \hr\\
-\emp{Lemma---[Unknown-Vulnerable cooperation]}\\
-o*:UnknownObj \loand\ o$'$:ExposedObj \loand\ MayAccess$^{Ind,Eve}$(o*,o$'$)\\
+\emp{Definition---[Vulnerable cooperation]}\\
+M,\losigma\ \loturns\ VulnerableCooperation(o*,o$'$) \loiff\ o*:UnknownObj \loand\ Cooperation(o*,o$'$)\\
 \hr
 \end{logic}
 
@@ -644,17 +642,14 @@ Notice how we already have a result about a Known-Safe cooperation. In this sect
 \emp{Corollary---[Indirect permission is made of direct permissions]}\\
 M,\losigma\ \loturns\ [ \=MayAccess$^{Ind,Now}$(o,o$'$)\\
 \>\loiff\\
-\>\loexists x. [ \=MayAccess$^{Ind,Now}$(o,x) \loand\\
-\>\> MayAccess$^{Dir,Now}$(x,o$'$) ] ]\\
+\>\loexists x. [ \=MayAccess$^{Ind,Now}$(o,x) \loand\ MayAccess$^{Dir,Now}$(x,o$'$) ] ]\\
 \hr
 \end{logic}
 
 \begin{logic}
 \hr\\
 \emp{Corollary---[Authority can be a chain of smaller authorities]}\\
-M,\losigma\ \loturns\ \=MayCall(o,o$'$)\\
-\> \loimplies\\
-\> \loexists x. $[$\=MayCall(o,x) \loand\ MayCall(x,o$'$)$]$\\
+M,\losigma\ \loturns\ \=MayCall(o,o$'$) \loimplies\ \loexists x. $[$\=MayCall(o,x) \loand\ MayCall(x,o$'$)$]$\\
 \hr
 \end{logic}
 
@@ -685,9 +680,9 @@ With these four corollaries, and from knowing that cooperation between trusted c
 
 \begin{logic}
 \hr\\
-\emp{Lemma---[Unknown-Protected cooperation]}\\
-o*:UnknownObj \loand\ o$'$:ExposedObj \loand\ MayAccess$^{Ind,Eve}$(o*,o$'$)\\
-\loand\ Dom(S,o$'$) \loand\ \loforall s. [ s\loin S \loimplies s:KnownObj ]\\
+\emp{Definition---[Protected cooperation]}\\
+M,\losigma\ \loturns\ ProtectedCooperation(o*,o$'$) \loiff\ \=o*:UnknownObj \loand\ Cooperation(o*,o$'$) \loand\ \\
+\>\loand\ Dom(S,o$'$) \loand\ \loforall s. [ s\loin S \loimplies s:KnownObj ]\\
 \hr
 \end{logic}
 
@@ -695,15 +690,14 @@ where objects s are known as attenuating objects in the OCap literature. To see 
 
 \begin{logic}
 \hr\\
-\emp{Lemma---[Unknown-Protected cooperation implies Known-Safe cooperation]}\\
-o*:UnknownObj \loand\ o$'$:ExposedObj \loand\ MayAccess$^{Ind,Eve}$(o*,o$'$)\\
-\loand\ Dom(S,o$'$) \loand\ \loforall s. [ s\loin S \loimplies s:KnownObj ]\\
-\loimplies\
-\loexists s$'$:KnownObj. [ MayAccess$^{Ind,Eve}$(o*,s$'$) \loand\ MayAccess$^{Ind,Eve}$(s$'$,o$'$) ]\\
+\emp{Lemma---[Protected cooperation implies Safe cooperation]}\\
+M,\losigma\ \loturns\ \=ProtectedCooperation(o*,o$'$) \loand\ Dom(S,o$'$) \loand\ \loforall s. [ s\loin S \loimplies s:KnownObj ]\\
+\>\loimplies\\
+\> \loexists s$'$:KnownObj. [ VulnerableCooperation(o*,s$'$) \loand\ SafeCooperation(s$'$,o$'$) ]\\
 \hr
 \end{logic}
 
-This says that if we have a configuration where object o$'$ is dominated by known objects, then the permission to use o$'$ by o* must involve at least a known object. This shows that we can use attenuating objects to mitigate vulnerability between unknown code and known code in OCap systems.\\
+This says that if we have a configuration where object o$'$ is dominated by known objects, then the permission to use o$'$ by o* must involve at least a known object s$'$. This shows that we can use attenuating objects to mitigate vulnerability between unknown code and known code in OCap systems.\\
 
 Therefore, this shows that we can always protect some object of interest by:
 
@@ -711,9 +705,9 @@ Therefore, this shows that we can always protect some object of interest by:
 \item being careful about our present path configurations so that we can ensure eventual path-isolation between the untrusted object and the object of interest
 \item ensuring that trusted objects dominate the object of interest and attenuates the permission and authority of the untrusted object \end{itemize}
 
-Therein lies also the difference between OCap and non-OCap models, because non-OCap models that allow forging of capabilities or a global ambient authority \textit{cannot} enforce security through pure path isolation, which is a distinctive feature of OCap models.\\
+Therein lies also the difference between OCap and non-OCap models. Non-OCap models may allow forging of capabilities or a global ambient authority, and thus \textit{cannot} enforce security through pure path isolation, which is a distinctive feature of OCap models.\\
 
-Protection strategies for attenuating objects can be implemented using defensive programming techniques like encapsulation and checking of conditions on method arguments. At the extreme ends, attenuating objects can take the shapes of either deciding to forward messages from the unknown object o* in an intact way, thereby allowing MayCall(o*,o$'$) to hold; or if some condition fails, the attenuating object can choose not to forward the message at all such that MayCall(o*,o$'$) does not hold. Somewhere in the middle, attenuating objects can also choose to modify the message from o* such that it becomes safe to forward, where MayCall(o*,o$'$) holds but since it has been attenuated by the attenuating object, we would know that the message from the attenuating object would be safe. What and how the attenuating objects decide to do with messages from unknown objects before forwarding them can be best expressed as OCap policies for the attenuating object.\\
+Protection strategies for attenuating objects can be implemented using defensive programming techniques like encapsulation and checking of conditions on method arguments. At the extreme end, attenuating objects can take the shape of either deciding to forward messages from the unknown object o* in a totally intact way, thereby allowing MayCall(o*,o$'$) to hold; or if some condition fails, the attenuating object can choose not to forward the message at all such that MayCall(o*,o$'$) does not hold. Somewhere in the middle, attenuating objects can also choose to modify the message from o* such that it becomes safe to forward, where MayCall(o*,o$'$) holds, but since it has been attenuated by the trusted attenuating object, we would know that the message from the attenuating object would be safe. What and how the attenuating objects decide to do with messages from unknown objects before forwarding them can be best expressed as OCap policies for the attenuating object.\\
 
 In the OCap pattern examples we will go through in the next section, protection of an object is accomplished through some attenuating object that will never leak the capability of the object of interest. A safe configuration is also expressed as attenuating objects dominating the object of interest in such a way that unknown code is forced to use them when cooperating with objects of interest in the system.
 
@@ -843,17 +837,19 @@ In the DOM Tree example above, we simulate initialising a webpage with a root \s
 Here, we provide the policies for the DOM Tree, using our methodology and Hoare tuples. The use of ":" indicates the variables of the LHS of ":" belonging to a primitive type or class stated in the RHS of ":". Before we dive into the policies, we define the lookup of the k-th parent of a restricted node as follows:\\
 
 \begin{logic}
-Definition ---[ReNode.parent]\\
-Given rn,rn$'$:ReNode, k:\lonat, then [ rn.parent\losup{k} = rn$'$ \loimplies \=(k $>$ 1 \loand\ rn.parent.parent\losup{k-1} = rn$'$) \loor\\
-\>(k = 1 \loand\ rn.parent = rn$'$) \loor\\
+\hr\\
+\textbf{Definition ---[ReNode.parent]}\\
+Given rn,rn$'$:ReNode, k:\lonat, then [ rn.parent\losup{k} = rn$'$ \loiff\ \=(k $\geq$ 1 \loand\ rn.parent.parent\losup{k-1} = rn$'$) \loor\\
 \>(k = 0 \loand\ rn = rn$'$) ] \\
+\hr
 \end{logic}
 \\
-This definition says that given a superscript \losup{k} placed on a \sf{parent}, it means that the result on the RHS of such a look up is the restricted node's parent on the LHS being called \sf{k} multiple times; if \sf{rn'} refers to the same restricted node as \sf{rn}, then k = 0.
+This definition says that given a superscript \losup{k} placed on a \sf{parent}, the result on the RHS of such a look up is the restricted node's parent on the LHS called \sf{k} times; if \sf{rn'} refers to the same restricted node as \sf{rn}, then k = 0.
 \paragraph{Policies for calling and modifying nodes}
 The following two policies describe the condition under which an Object or ReNode may call methods on a node.\\
 
 \begin{logic}
+\hr\\
 \emp{Policy ---[Object calls Node]}\\
 \loforall o:Object, \loforall n:Node. [ \=MayCall(o,n) \loand\ Dom(S,n) \loand\ \loforall s. [ s\loin S \loimplies s:ReNode ]\\
 \>\loimplies\\
@@ -870,48 +866,62 @@ The following two policies describe the condition under which an Object or ReNod
 \emp{Policy ---[ReNode calls Node (Sufficient Condition)]}\\
 \loforall rn:ReNode, \loforall n:Node. [ \=rn.node = n \loimplies\
 MayCall(rn,n) ]\\
+\hr
 \end{logic}
 
 Policy [Object calls Node] says that if we have an object \sf{o} that can call the methods of node \sf{n}, and we have a set \sf{S} that dominates n such that all members in \sf{S} are of class \sf{ReNode}, then it implies that object \sf{o} must be able to call methods of a restricted node \sf{rn} out of \sf{S} and that \sf{rn} must able to call methods of \sf{n}. This just means that the chain of authority from \sf{o} to \sf{n} must involve \sf{rn} in the chain.\\
 Policy [ReNode calls Node] says something about the last restricted node \sf{rn$'$} at the end of the chain of authority to n: that a restricted node \sf{rn} can call \sf{n} by calling another restricted node \sf{rn$'$} that points to \sf{n}. That is, a restricted node \sf{rn} that points to a node \sf{n} (\sf{rn.node = n)} \\
-\hr
+
 \paragraph{Policy for restricted node calling other restricted nodes}
 \begin{logic}
+\hr\\
 \emp{Policy ---[ReNode calls ReNode (Necessary Condition)]}\\
 \loforall rn,rn$'$:ReNode. [ \=MayCall(rn,rn$'$)\\
 \>\loimplies\\
 \>\loexists k,j:\lonat. [ \=(rn.parent\losup{k} = rn$'$.parent\losup{j}) \loand\ rn.depth \logeq k ] ]\\
 \end{logic}\\
 
-Policy [ReNode calls ReNode] specifies a necessary condition and a sufficient condition for which a restricted node \sf{rn} may call another restricted node \sf{rn$'$}. This policy is subtle and says that a restricted node rn is allowed to navigate to all the descendants from all its accessible ancestors. $k$ is a natural number that indexes all the accessible ancestors of rn $k$ levels up the tree from rn, while we use another natural number $j$ that describes all the descendant nodes $j$ levels down the tree from a particular accessible ancestor. If rn$'$ is a direct descendant from rn, then k = 0. If \sf{rn$'$} is a direct ancestor of rn, then j = 0. An ancestor $k$ levels up the tree is only accessible if rn has sufficient depth access (rn \logeq k); there are no restrictions on accessing the descendants $j$ levels down the tree from a particular accessible ancestor.\\
+\begin{logic}
+\emp{Policy ---[ReNode calls ReNode (Sufficient Condition)]}\\
+\loforall k,j:\lonat, \loforall rn,rn$'$:ReNode. [ \=(rn.parent\losup{k} = rn$'$.parent\losup{j}) \loand\ rn.depth \logeq k \\
+\>\loimplies\\
+\>MayCall(rn,rn$'$) ]\\
+\hr
+\end{logic}\\
+
+Policy [ReNode calls ReNode] describes a necessary condition and a sufficient condition for which a restricted node \sf{rn} may call another restricted node \sf{rn$'$}. This policy is subtle and says that a restricted node rn is allowed to navigate to all the descendants from all its accessible ancestors. $k$ is a natural number that indexes all the accessible ancestors of rn $k$ levels up the tree from rn, while we use another natural number $j$ that describes all the descendant nodes $j$ levels down the tree from a particular accessible ancestor. If rn$'$ is a direct descendant from rn, then k = 0. If \sf{rn$'$} is a direct ancestor of rn, then j = 0. An ancestor $k$ levels up the tree is only accessible if rn has sufficient depth access (rn \logeq k); there are no restrictions on accessing the descendants $j$ levels down the tree from a particular accessible ancestor.\\
 
 
 \hr
 \paragraph{Policy for reasoning about new paths from ReNodes}
 \begin{logic}
+\hr\\
 \emp{Policy ---[Domination No Leaked Paths from ReNode]}\\
 \loforall n:Node, RND$_{old}$. \=[ Dom(RND$_{old}$,n) \loand\ \loforall s. [ s\loin RND$_{old}$\loimplies s:ReNode ]\\
 \>\{ \texttt{\textit{code}} \}\\
 \loexists RND$_{new}$. [ \=Dom(RND$_{new}$,n) \loand\ \loforall s$'$\loin RND$_{new}$. [ \=s$'$:ReNode \loand\\
 \>\loexists s$''$\loin RND$_{old}$, \loexists k,j:\lonat. [ \=(s$'$.parent\losup{k} = s$''$.parent\losup{j})  \loand\ (s$''$.depth \logeq j) \loand\\
 \>\>(s$'$.depth = s$''$.depth - j + k) ] ] ] ]\\
+\hr
 \end{logic}
 
 This policy is a very important security policy of the DOM Tree pattern.
 The policy confines all possible paths to a node \sf{n} that might arise from running \textit{any} code, if all members in the initial set that dominates n belong to class \sf{ReNode}.
-For all restricted nodes in the new dominating set, they must have been descended from some restricted node (\sf{rn$''$.parent\losup{j}}), where (\sf{rn$''$.parent\losup{j}}) is accessible from a restricted node rn$''$ in the old dominating set (rn$''$.depth \logeq j). The policy says that an accessible ancestor rn$''$ from a restricted node rn$'$ in the old dominating set is indexed by a depth level j so that the accesible ancestor would inherit a depth level j higher than rn$''$'s depth level---(rn$''$.parent\losup{j}.depth = rn$''$.depth - j). For a newly created restricted node \sf{rn$'$} in the new dominating set that is descended k levels down from one of these accessible ancestors, it would thus inherit a depth of (rn$''$.depth - j + k). In other words every restricted node in the new dominating set must fall into one of these categories:
+For all restricted nodes in the new dominating set, they must have been descended from some restricted node (\sf{s$''$.parent\losup{j}}), where (\sf{s$''$.parent\losup{j}}) is accessible from a restricted node s$''$ in the old dominating set (\sf{s$''$.depth \logeq j}). The policy says that an accessible ancestor \sf{s$''$} from a restricted node \sf{s$'$} in the old dominating set is indexed by a depth level j so that the accessible ancestor would inherit a depth level j higher than the depth level of \sf{s$''$}---(\sf{s$''$.parent\losup{j}.depth = s$''$.depth - j}). For a newly created restricted node \sf{s$'$} in the new dominating set that is descended k levels down from one of these accessible ancestors, it would thus inherit a depth of (\sf{s$''$.depth - j + k}). In other words every restricted node in the new dominating set must fall into one of these categories:
 \begin{itemize}
 \item a newly created restricted node descended k levels down directly from a restricted node in the old dominating set---\textbf{(j = 0, k > 0)}
 \item a newly created restricted node descended k levels down from some restricted node that is an accessible ancestor j levels up of a restricted node from the old dominating set---\mbox{\textbf{(j > 0, k > 0)}}.
 \item a new created restricted node that is a direct ancestor from a restricted node in the old dominating set---\textbf{(j > 0, k = 0)}
 \item a restricted node in the new dominating set is also a member of the old dominating set---\textbf{(j = 0, k = 0)}
 \end{itemize}
-The argument for the policy is as follows: given a set of initial restricted nodes, we know by definition of the callable methods of a restricted node such that it can only create, store and return the capabilities of newly created restricted nodes, or return a \sf{null} value, or return a \sf{String} value, in \textbf{all} of its methods. The policies for these methods can be found in \cref{renodemethods}. The execution policies in 
+The argument for the policy is as follows: given a set of initial restricted nodes, we know by definition of the callable methods of a restricted node such that it can only create, store and return the capabilities of newly created restricted nodes, or return a \sf{null} value, or return a \sf{String} value, in \textbf{all} of its methods.\\
+
+The policies for these methods can be found in \cref{renodemethods}. The execution policies in 
 \cref{renodemethods} imply that all newly created restricted nodes from existing restricted nodes must obey certain policies (such as inheriting an incremented depth from its creator restricted node if its a child, or inheriting a decremented depth if it is a parent). Therefore, all restricted nodes in the new dominating set, if created during the unknown code execution, must be connected to a creator restricted node in the old dominating set through some path formed from the policies in \cref{renodemethods}, or is already a member of the old dominating set, no matter what kind of code execution. 
 \paragraph{Policies for methods of ReNode}\label{renodemethods}
 The six methods in ReNode are described in the policies as follows:\\
 
-\begin{logic}
+\begin{logic}\hr\\
 \emp{Policy ---[Execution of ReNode.parent]}\\
 \loforall rn:ReNode, \loexists i:String. \loforall s. [ \=(rn.depth > 0)\\
 \>\{\texttt{s = rn.parent()}\} \\
@@ -960,20 +970,11 @@ This policy says that the pre-condition creating a parent restricted node requir
 \end{logic}
 
 \hr
-\paragraph{Policy for Node Property Modification}\label{policy_node_mod}
-
-This policy uses the Lemma [Field Modification requires Authority] and says that if a property of a node \sf{n} is modified after the execution of some code by object \sf{o}, then it implies \sf{o} must be able to invoke a method on \sf{n}.\\
-
-\begin{logic}
-\emp{Policy ---[Node Property Modification]}\\
-\loforall n:Node, \loforall o:Object. [ [ n.prop(i) = j \{ \texttt{o.\textit{code}} \} n.prop(i) \loneq\ j ] \loimplies\ MayCall(o,n) ]
-\end{logic}
-
-\hr
 \paragraph{Policy for ReNode Constructor}\label{renodeconstructor}
 The constructor for \sf{ReNode} is private to the module and class \sf{ReNode}. This means that an unknown object cannot directly use the constructor of \sf{ReNode} even if it holds the capability of an object belonging to class ReNode, unless the unknown object is in the same module as ReNode.\\
 
 \begin{logic}
+\hr\\
 \emp{Policy ---[Constructor of new ReNode]}\\
 \loforall rn:ReNode, \loforall n:Node, \loforall k:\lonat. [ \textit{true} \{\texttt{rn = ReNode(n,k)}\} \=rn.node = n \loand\\
 \>rn.depth = k \loand\\
@@ -981,7 +982,7 @@ The constructor for \sf{ReNode} is private to the module and class \sf{ReNode}. 
 \end{logic}
 
 \hr
-\paragraph{Policies on invariants and immutable properties}\label{policy_immutable}
+\paragraph{Policies on immutable properties}\label{policy_immutable}
 The following policies describe the properties that hold in any state of execution. Namely, a node that a restricted node points to will never change [Immutability of ReNode.node], its ancestor(s) will never change [Immutability of ReNode.parent\losup{k}], its depth will never change [Immutability of ReNode depth], and the depth of a restricted node will never be less than 0 [Invariant of minimum ReNode depth].\\
 
 \begin{logic}
@@ -1000,7 +1001,7 @@ The following policies describe the properties that hold in any state of executi
 \end{logic}
 
 \begin{logic}
-\emp{Policy ---[Invariant of minimum ReNode depth]}\\
+\emp{Policy ---[Immutability of minimum ReNode depth]}\\
 \loforall rn:ReNode. [ \textit{true} \{\texttt{code}\} rn.depth \logeq 0 ]\\
 \end{logic}
 
@@ -1039,14 +1040,15 @@ o.mystery0(renode2b)
 &&
 \end{lstlisting} \captionof{figure}{Code for DOM Tree Pattern with unknown provenance}
 \vspace{0.5em}
-It is unsafe to hand the capability of \sf{node2b} directly to an untrusted agent, because it is possible the properties and state of the entire DOM tree would be compromised, in particular the root node \sf{node0} whose properties and state we want to protect in this example. Note that an untrusted agent having the direct capability of \sf{node2b} implies being that the untrusted agent is able to obtain the direct capability of \sf{node1}, \sf{node2a}, and \sf{node0}, because \sf{node2b} has methods that freely gives those capabilities to any caller.\\
+It is unsafe to hand the capability of \sf{node2b} directly to an untrusted agent, because it is possible the properties and state of the entire DOM tree would be compromised, in particular the root node \sf{node0} whose properties and state we want to protect in this example. Note that an untrusted agent having the direct capability of \sf{node2b} implies that the untrusted agent is able to obtain the direct capability of \sf{node1}, \sf{node2a}, and \sf{node0}, because \sf{node2b} has methods that freely gives those capabilities to any caller.\\
 
  How then, can we allow an untrusted agent whose object and code we do not know, to safely modify the properties of \sf{node2b},  and some other nodes (\sf{node2a} and \sf{node1}), whose properties are not critical and we do not mind being modified, but \textbf{not} allow the untrusted agent to modify the properties of \sf{node0} which are critical and which we want to protect?\\
 
-We will accomplish this by creating an attenuating restricted node object called \sf{reNode2b}, which points to \sf{node2b} and has a depth level of \sf{1} (\sf{reNode2b.node = node2b, reNode2b.depth = 1}). On \texttt{line 19}, we pass \sf{reNode2b} to an object \sf{o}, of unknown provenance. While we do not know exactly how \sf{o} might make use of \sf{reNode2b}, to represent unknown code execution on \sf{reNode2b} by \sf{o}, we can assume that \sf{o} would have a function called \sf{mystery} that executes some unknown code on \sf{reNode2b}. Using our policies, we can comfortably argue that the properties of \sf{node0} have been preserved after the execution of the unknown \sf{mystery} function by \sf{o}. However, because we have configured \sf{reNode2b} to allow the unknown object to potentially modify the properties of \sf{node2a}, \sf{node2b} and \sf{node1}, we do not know if the properties of \sf{node2a}, \sf{node2b} and \sf{node1} have been preserved.\\
+We will accomplish this by creating an attenuating restricted node object called \sf{reNode2b}, which points to \sf{node2b} and has a depth level of \sf{1} (\sf{reNode2b.node = node2b, reNode2b.depth = 1}). On \texttt{line 19}, we pass \sf{reNode2b} to an object \sf{o} of unknown provenance. While we do not know exactly how \sf{o} might make use of \sf{reNode2b}, we can comfortably argue that the properties of \sf{node0} have been preserved after the execution of an unknown \sf{mystery} function by \sf{o}. However, because we have configured \sf{reNode2b} to allow the unknown object to potentially modify the properties of \sf{node2a}, \sf{node2b} and \sf{node1}, we do not know if the properties of \sf{node2a}, \sf{node2b} and \sf{node1} have been preserved.\\
 
-We argue that \textbf{Assertion 1} at \texttt{line 21} holds, such that after execution of a piece of unknown code, \sf{node0.getProp("key") = "true"}.
-We begin by stating several facts at \texttt{line 18}, before the execution of \sf{mystery}; we know that:
+We argue that \textbf{Assertion 1} at \texttt{line 21} holds, i.e. after execution of a piece of unknown code, we know that \sf{node0.getProp("key") = "true"}. We now sketch the proof of this assertion below.\\
+
+We begin by stating several facts at \texttt{line 18}, before the execution of \sf{mystery}. namely:
 \begin{itemize}
 \item \textbf{F1}: \sf{node2b.getProp("key") = true}
 \item \textbf{F2}: \sf{reNode2b.depth = 1}
@@ -1058,11 +1060,19 @@ We begin by stating several facts at \texttt{line 18}, before the execution of \
 
 Then at \texttt{line 21}, we consider the effects of the \sf{mystery} function. We argue that:
 \begin{itemize}
-\item \textbf{(A)}: \textbf{F1} is preserved, unless \textbf{\sf{MayCall(o,node0)}} holds at line 21. This is because to modify the value of "key" in \sf{node2b}, \textbf{Policy [Node Property Modification]} at \cref{policy_node_mod} tells us that a method of \sf{node0} has to be invoked by \sf{o}.
+\item \textbf{(A)}: \textbf{F1} is preserved, unless \textbf{\sf{MayCall(o,node0)}} holds at line 19. This is based on the observation below:\\
+\begin{logic}
+\hr\\
+\emp{Observation ---[Node Property Modification]}\\
+\loforall n:Node, \loforall o:Object. [ [ n.prop(i) = j \{ \texttt{o.\textit{code}} \} n.prop(i) \loneq\ j ] \loimplies\ MayCall(o,n) ]\\
+\hr
+\end{logic}
+
+which follows from our Lemma [Field Modification Requires Authority], which says that if a property of a node \sf{n} is modified after the execution of some code by object \sf{o}, then it implies \sf{o} must be able to invoke a method on \sf{n}.
 \end{itemize}
 Therefore, to show that \textbf{Assertion 1} at \texttt{line 21} holds, it is sufficient to show that at \texttt{line 19}, the assertion MayCall(o,node0) does not hold. We will show this by contradiction.\\
 
-Let us assume:
+Let us assume during execution of the \sf{mystery} function in \texttt{line 19}; at some point:
 \begin{itemize}\item \textbf{(B)}: \sf{MayCall(o,node0)}\end{itemize}
 
 During execution of the method call \sf{mystery}, the receiver is \sf{o}, and the method argument is \sf{reNode2}. Moreover, \sf{node0} was created before \sf{o}. Therefore, within this frame, it holds that : 
@@ -1104,19 +1114,63 @@ From \textbf{(G)}, and \textbf{(F2)} \sf{which says reNode2b.depth = 1}, we obta
 \end{itemize}
 We thus obtain a contradiction from \textbf{(F)}, and we know that assumption \textbf{(B)} must be false:
 \begin{itemize} \item \textbf{\sf{\loneg MayCall(o,node0)}} \end{itemize}
-***Consequently, from \textbf{(A)}, we know the properties of \sf{node0} is preserved.\\
+Consequently, from \textbf{(A)}, we know the properties of \sf{node0} is preserved.\\
 
-Note that in the above steps we used without mentioning explicitly that the parent and depth fields of all restricted nodes belonging to \sf{ReNode} are immutable. Particularly, our \textbf{Policies on invariants and immutable properties} in \cref{policy_immutable} tell us that the following must hold in all states of exection: \textbf{(F2-F6)}, and the minimum depth of all restricted nodes must be greater than 0.
+Note that in the above steps we used without mentioning explicitly that the parent and depth fields of all restricted nodes belonging to \sf{ReNode} are immutable. Our \textbf{Policies on immutable properties} in \cref{policy_immutable} tell us that the properties \textbf{(F2-F6)} are preserved throughout execution of the body of the \sf{mystery} function, and the minimum depth of all restricted nodes must be greater than 0.
 \clearpage
 \subsection{Caretaker and Membrane Patterns}
 
 The Caretaker pattern originally appeared in Redell's 1974 work {\cite{redell1974}, but features prominently along with its more advanced Membrane pattern in the works of \cite{miller2006,murray2010,swasey2017}. Unlike the previous DOM Tree pattern, protected objects in the Caretaker and Membrane pattern are now no longer necessarily ordered in some hierarchical access structure. Consequently, the attenuating 'caretaker' and 'membrane' objects do not try to maintain the integrity of some hierarchy structure, as compared to the attenuating ReNode object in the DOM Tree, where it maintains hierarchy of the Tree by adjusting the depth of ReNodes that it can return (parent ReNodes have decremented depths while child ReNodes have incremented depths).\\
 
-The Caretaker merely fulfils the simple task of 1) masking the protected object's direct capability, and 2) only forwarding messages to the protected object according to some condition in an associated lock object. Note that a simple caretaker object forwards messages without analysing the contents of the messages, i.e. messages can contain capabilities. The Membrane pattern on the other hand, shares some similarities from both the DOM Tree pattern and Caretaker pattern. The Membrane pattern, is identical to the Caretaker pattern in the sense that it is meant to mask the protected object's direct capability and forward messages to the protected object, but with the exception that it does not forward messages that contain capabilities without first 'wrapping' those capabilities within new membranes. The membrane attenuating object can create more membranes (or deep attenuating objects) that is similar to the DOM Tree pattern where a restricted node creates more restricted nodes when accessing different parts of the tree.\\
+The Caretaker merely fulfils the simple task of 1) masking the protected object's direct capability, and 2) only forwarding messages to the protected object according to some condition in an associated lock object. Note that a simple caretaker object forwards messages without analysing the contents of the messages, i.e. messages can contain capabilities. The Membrane pattern on the other hand, shares some similarities from both the DOM Tree pattern and Caretaker pattern. The Membrane pattern is identical to the Caretaker pattern in the sense that it is meant to mask the protected object's direct capability and forward messages to the protected object, but with the exception that it does not forward messages that contain capabilities without first 'wrapping' those capabilities within new membranes. The membrane attenuating object can create more membranes (or deep attenuating objects) that is similar to the DOM Tree pattern where a restricted node creates more restricted nodes when accessing different parts of the tree.\\
 
-We show the visual illustration of the differences between the Caretaker and Membrane patterns in \cref{fig:figcaretaker} and \cref{fig:figmem}. In the Caretaker pattern, while the status of the lock object \sf{Carol-CT-Lock} for the caretaker object \sf{Carol-CT} is disabled (\sf{Carol-CT.status = false}), object \sf{Bob} can pass his own capability to \sf{Carol} using \sf{Carol-CT}, and consequently, with \sf{Bob}'s capability, \sf{Carol} can pass the capability of \sf{Diane}, which \sf{Carol} initially holds, to \sf{Bob}. \textit{After} the \sf{Lock} object is enabled (\sf{Carol-CT.status = true}), \sf{Carol-CT} no longer forwards messages to \sf{Carol}. However, because \sf{Bob} has transferred his own capability to \sf{Carol}, and \sf{Carol} has transferred the capability of \sf{Diane} to \sf{Bob} during \sf{Carol-CT.status = false}, even after \sf{Carol-CT.status = true}, Carol can continue to communicate with \sf{Bob}, and \sf{Bob} can continue to communicate with \sf{Diane}, because these objects can store the capabilities they have received for future use. For the Membrane example however, for all messages that contain capabilities, those messages will be attenuated before being forwarded. When \sf{Bob} tries to send his own capability to \sf{Carol} through the membrane \sf{Carol-M}, \sf{Carol-M} will wrap the capability of \sf{Bob} within the message in a new membrane \sf{Bob-M} and lock \sf{Bob-M-Lock}, and forward the new membrane  \sf{Bob-M} to \sf{Carol}, and when \sf{Carol} tries to send the capability of \sf{Diane} to \sf{Bob} using \sf{Bob-M}, a similar membrane \sf{Diane-M} and lock object is created by \sf{Bob-M}. When \sf{Alice} decides to disable \sf{Carol-M} by setting \sf{Carol-M-Lock = true}, the disabling action can propagate to all membranes descended from \sf{Carol-M}, thereby preventing communication from \sf{Carol} to \sf{Bob} and \sf{Bob} to \sf{Diane}.
+We first show the important policies for the Caretaker pattern in \cref{sec:caretakerpolicies} and a visual illustration of it in \cref{fig:figcaretaker}. The policies for the Membrane pattern can be found next in \cref{sec:membranepolicies}, and its visual illustration in \cref{fig:figmem}. In the Caretaker pattern, while the status of the lock object \sf{Carol-CT-Lock} for the caretaker object \sf{Carol-CT} is disabled (\sf{Carol-CT.status = false}), object \sf{Bob} can pass his own capability to \sf{Carol} using \sf{Carol-CT}, and consequently, with \sf{Bob}'s capability, \sf{Carol} can pass the capability of \sf{Diane}, which \sf{Carol} initially holds, to \sf{Bob}. \textit{After} the \sf{Lock} object is enabled (\sf{Carol-CT.status = true}), \sf{Carol-CT} no longer forwards messages to \sf{Carol}. However, because \sf{Bob} has transferred his own capability to \sf{Carol}, and \sf{Carol} has transferred the capability of \sf{Diane} to \sf{Bob} during \sf{Carol-CT.status = false}, even after \sf{Carol-CT.status = true}, Carol can continue to communicate with \sf{Bob}, and \sf{Bob} can continue to communicate with \sf{Diane}, because these objects can store the capabilities they have received for future use. For the Membrane example however, for all messages that contain capabilities, those messages will be attenuated before being forwarded. When \sf{Bob} tries to send his own capability to \sf{Carol} through the membrane \sf{Carol-M}, \sf{Carol-M} will wrap the capability of \sf{Bob} within the message in a new membrane \sf{Bob-M} and lock \sf{Bob-M-Lock}, and forward the new membrane  \sf{Bob-M} to \sf{Carol}, and when \sf{Carol} tries to send the capability of \sf{Diane} to \sf{Bob} using \sf{Bob-M}, a similar membrane \sf{Diane-M} and lock object is created by \sf{Bob-M}. When \sf{Alice} decides to disable \sf{Carol-M} by setting \sf{Carol-M-Lock = true}, the disabling action can propagate to all membranes descended from \sf{Carol-M}, thereby preventing communication from \sf{Carol} to \sf{Bob} and \sf{Bob} to \sf{Diane}.
 
 \clearpage
+\subsubsection{Policies for Caretaker Pattern}\label{sec:caretakerpolicies}
+Here we show the important policies for the Caretaker pattern, where we also say how the Caretaker might leak paths in \textbf{Policy [Possible Leaked Paths from Caretaker]}. Path leakage is possible because the caretaker might possibly return the capability of its protected object o$'$ from some method call forwarded to o$'$, when o$'$ has a method that exposes its own capability; i.e. the caretaker does not create deep attenuating objects to mask capabilities returned by its protected object, or messages containing capabilities passed by its caller.\\
+
+\begin{logic}
+\emp{Policy ---[Object calls Node]}\\
+\loforall o,o$'$:Object, \loforall n:Node. [ \=MayCall(o,o$'$) \loand\ Dom(S,o$'$) \loand\ \loforall s. [ s\loin S \loimplies s:Caretaker ]\\
+\>\loimplies\\
+\>\loexists ct:Caretaker. [ ct\loin S \loand\ MayCall(o,ct) \loand\ MayCall(ct,o$'$) ] ]\\
+\end{logic}
+
+\begin{logic}
+\emp{Policy ---[Possible Leaked Paths from Caretaker]}\\
+\loneg\ [ \loforall o:Object, S$_{old}$. \=[ Dom(S$_{old}$,o) \loand\ \loforall s. [ s\loin S$_{old}$\loimplies s:Caretaker ]\\
+\>\{ \texttt{\textit{code}} \}\\
+\>\loexists S$_{new}$. [ \=Dom(S$_{new}$,n) \loand\ \loforall s$'$\loin S$_{new}$. [ \=s$'$:Caretaker ] ] ] ]\\
+
+\end{logic}
+
+\begin{logic}
+\emp{Policy ---[Caretaker calls Caretaker.target (Necessary Condition)]}\\
+\loforall c:Caretaker. [ MayCall(c,c.target) \loimplies\ c.lock.status = \texttt{false} ]\\
+\end{logic}
+
+\begin{logic}
+\emp{Policy ---[Execution of Lock.lock()]}\\
+\loforall k:Lock. [ \=\textit{true} \{\texttt{k.lock()}\} k.status = \texttt{true} ]\\
+\end{logic}
+
+\begin{logic}
+\emp{Policy ---[Constructor of new Caretaker]}\\
+\loforall ct:Caretaker, \loforall o:Object, \loforall k:Lock. [ \textit{true} \{\texttt{ct = Caretaker(o,k)}\} \=ct.target = o \loand\ ct.lock = k ]\\
+\end{logic}
+
+\begin{logic}
+\emp{Policy ---[Immutability of Caretaker.lock]}\\
+\loforall c:Caretaker. [ \=c.lock = k \{\texttt{\textit{code}}\} c.lock = k ]\\
+\end{logic}
+
+\begin{logic}
+\emp{Policy ---[Immutability of Caretaker.target]}\\
+\loforall c:Caretaker. [ \=c.target = o \{\texttt{\texttt{\textit{code}}}\} c.target = o ]\\
+\hr
+\end{logic}
+
 \begin{minipage}{\textwidth}
 \subsubsection{Caretaker Pattern Illustration}\label{sec:figcaretaker}
 \centering
@@ -1124,7 +1178,67 @@ We show the visual illustration of the differences between the Caretaker and Mem
  \captionof{figure}{Caretaker Pattern}
   \label{fig:figcaretaker}
 \end{minipage}
+\clearpage
+\subsubsection{Policies for Membrane Pattern}\label{sec:membranepolicies}
+Here we show the important policies for the Membrane pattern. Unlike the Caretaker pattern, a Membrane does not leak capabilities because the membrane creates deep attenuating new membranes to mask capabilities returned by its protected object, and capabilities in messages passed by its caller.\\
 
+Every membrane and lock object has a ghost field \sf{parent}: \begin{itemize}
+\item The ghost field \sf{parent} of a membrane object \sf{m$'$} points to a membrane \sf{m} if the constructor for \sf{m$'$} is called  by \sf{m}, otherwise it points to \sf{null}
+\item The ghost field \sf{parent} of a lock object \sf{k$'$} points to a lock \sf{k} if the constructor for \sf{k$'$} is called by a membrane \sf{m}, where \sf{m.lock = k}, otherwise it points to \sf{null}
+\end{itemize}
+
+\begin{logic}
+\emp{Policy ---[Object calls Object$'$]}\\
+\loforall o,o$'$:Object. [ \=MayCall(o,o$'$) \loand\ Dom(S,o$'$) \loand\ \loforall s. [ s\loin S \loimplies s:Membrane ]\\
+\>\loimplies\\
+\>\loexists m:Membrane. [ m\loin S \loand\ MayCall(o,m) \loand\ MayCall(m,o$'$) ] ]\\
+\end{logic}
+
+\begin{logic}
+\emp{Policy ---[Domination No Leaked Paths from Membrane]}\\
+\loforall o:Object, MEM$_{old}$. \=[ Dom(MEM$_{old}$,o) \loand\ \loforall s. [ s\loin MEM$_{old}$\loimplies s:Membrane ]\\
+\>\{ \texttt{\textit{code}} \}\\
+\>\loexists MEM$_{new}$. [ \=Dom(MEM$_{new}$,n) \loand\ \loforall s$'$\loin MEM$_{new}$. [ \=s$'$:Membrane \loand\\
+\>\>\loexists s$''$\loin MEM$_{old}$, \loexists k:\lonat. [ \=(s$'$.parent\losup{k} = s$''$) ] ] ] ]\\
+\end{logic}
+
+\begin{logic}
+\emp{Policy ---[Membrane calls Membrane.target (Necessary Condition)]}\\
+\loforall m:Membrane. [ MayCall(m,m.target) \loimplies\ m.lock.status = \texttt{false} ]\\
+\end{logic}
+
+
+\begin{logic}
+\emp{Policy ---[Constructor of new Membrane]}\\
+\loforall m:Membrane, \loforall o:Object, \loforall k:Lock. [ \textit{true} \{\texttt{m = Membrane(o,k)}\} \=m.target = o \loand\ m.lock = k ]\\
+\end{logic}
+
+\begin{logic}
+\emp{Policy ---[Each Membrane in the Tree has an associated Lock in the same Tree]}\\
+\loforall m,m$'$:Membrane, \loforall j:\lonat. [ m.parent\losup{j} = m$'$ \loiff\ m.lock.parent\losup{j} = m$'$.lock]\\
+\end{logic}
+
+\begin{logic}
+\emp{Policy ---[Execution of Lock.lock()]}\\
+\loforall k:Lock. [ \=\textit{true} \{\texttt{k.lock()}\} k.status = \texttt{true} ]\\
+\end{logic}
+
+\begin{logic}
+\emp{Policy ---[Execution of Lock.lockall()]}\\
+\loforall k:Lock. [ \=\textit{true} \{\texttt{k.lockall()}\} \loforall k$'$:Lock, \loforall j$>$0. [ k$'$.parent\losup{j} = k \loimplies\ k$'$.status = \texttt{true} ]\\
+\end{logic}
+
+
+\begin{logic}
+\emp{Policy ---[Immutability of Membrane.lock]}\\
+\loforall m:Membrane. [ \=m.lock = k \{\texttt{\textit{code}}\} m.lock = k ]\\
+\end{logic}
+
+\begin{logic}
+\emp{Policy ---[Immutability of Membrane.target]}\\
+\loforall m:Membrane. [ \=m.target = o \{\texttt{\texttt{\textit{code}}}\} m.target = o ]\\
+\hr
+\end{logic}
 
 \begin{minipage}{\textwidth}
 \subsubsection{Membrane Pattern Illustration}\label{sec:figmem}
@@ -1133,10 +1247,6 @@ We show the visual illustration of the differences between the Caretaker and Mem
  \captionof{figure}{Membrane Pattern}
    \label{fig:figmem}
 \end{minipage}
-\clearpage
-
-
-
 \section{Case Study of Ethereum / Solidity as a Non-OCap Model}\label{sec:ethereum}
 
 \subsection{Motivation}
@@ -1149,7 +1259,7 @@ Solidity\footnote{https://solidity.readthedocs.io/en/develop/} is a high-level l
 On the Ethereum blockchain, there are generally two types of accounts: "externally-owned accounts"(external accounts)  and "contract accounts"(contracts). We define these entities as objects because they encapsulate both state and behaviour. In terms of state, both types of accounts have an Ether balance (the currency of Ethereum) associated with them, while contract accounts differ from external accounts by having additional persistent contract storage that can store data such as integers and strings. In terms of behaviour, both types of accounts come with a predefined set of methods to transfer Ether, but contract accounts can have additional specified methods. The methods of external accounts can only be called by a person who has authenticated himself as the owner of the external account using a private key, while methods of contract accounts that are deployed on the blockchain can be called based on any conditions defined in the contract.
 Hence, external accounts are controlled by public-private key cryptography, while contract accounts are controlled by their contract code. An external account has no code but can send messages to other external accounts or contract accounts by creating or signing a transaction. For contract accounts, everytime the contract account receives a message, its code activates, allowing it to read and write to its internal storage and sending other messages to other external accounts or contracts. Transactions can be triggered from both types of accounts, though contracts can only trigger transactions in response to other transactions that they have received. Therefore, all transactions in Ethereum can only originate from external accounts.
 
-\subsubsection{Object References/Addresses} In Ethereum, the designations of all external account and contract objects are made of up a 20 bytes value. Hence, if we treat smart contracts and Ethereum accounts as objects, then these object references are non-opaque---because anybody can specify an address using a 20 bytes string value. That is, anybody on Ethereum only needs the bit information of a particular address of an object to start interacting with the object. Unlike in Java where knowing the bit information of an object address does not imply knowing the designation/reference of an object, in Ethereum, the bit information of an address \textit{is} the object reference.
+\subsubsection{Object References/Addresses} In Ethereum, the designations of all external account and contract objects are made of up a 20 bytes value. Hence, if we treat smart contracts and Ethereum accounts as objects, then these object references are not unforgeable---because anybody can specify an address using a 20 bytes string value. That is, anybody on Ethereum only needs the bit information of a particular address of an object to start interacting with the object. Unlike in Java where knowing the bit information of an object address does not imply knowing the designation/reference of an object, in Ethereum, the bit information of an address \textit{is} the object reference.
 
 \subsection{Object Protection in Solidity}
 Because all smart contract/account object references in Solidity are available to everybody, the concept of isolating objects do not exist in Ethereum. Consequently, the concept of protecting objects through eventual path-isolation does not exist, because:\\
@@ -1158,20 +1268,21 @@ Because all smart contract/account object references in Solidity are available t
 \ablock\loforall o:ExtAcct, \loforall o$'$:Object. [ MayAccess$^{Dir,Now}$(o,o$'$) ]\\
 \end{logic}
 
-where we define o as objects representing external accounts and o$'$ as objects representing external accounts or contracts in Solidity. In other words, on the Solidity platform, every external account has a path to every object on the blockchain. Therefore, in Ethereum, private-public key cryptography is used to determine whether one has the authority to use an external account, while for contract accounts, we can only use a form of stack-based access control that allow whether a method called is allowed to succeed or fail---the protected contract object o$'$ can only enforce policies in a state \losigma\ \textit{after} it has been called by another object since:\\
+where we define o as objects representing external accounts and o$'$ as objects representing external accounts or contracts in Solidity. In other words, on the Solidity platform, every external account has a path to every object on the blockchain. Therefore, in Ethereum, private-public key cryptography is used to determine whether one has the authority to use an external account, while for contract accounts, we can only use a form of stack-based access control that determines whether a method call is allowed to succeed or fail---the protected contract object o$'$ can only enforce policies in a state \losigma\ \textit{after} it has been called by another object since:\\
 
 \begin{logic}
 \ablock \loforall o:ExtAcct, \loforall o$'$:Object. [ MayCall(o,o$'$) ]\\
 \end{logic}
 
+Note that because contracts in Ethereum are restricted by their code in terms of what they can perform, it is not true that all contracts may invoke behaviours of all objects in Ethereum.
 \subsubsection{Protection through Message Sender Authentication}
-In Ethereum, protection of an external account is done through private key authentication and protection of a smart contract is done through specifying the conditions on whether a particular method call would be successful. For external accounts, once a person has provided the correct private key, the person is allowed to call any of the predefined methods in an external account that facilitate ether transactions. For contracts, things become more complex because the code of all contracts are transparent and publicly available to everyone. What then, are the kind of protection mechanisms that a smart contract can deploy? As addresses of smart contracts are transparent and globally available, contracts \textit{cannot} prevent anybody from sending them messages, but they can dictate \textit{how} they respond to these messages.\\
+In Ethereum, protection of an external account is done through private key authentication and protection of a smart contract is done through specifying the conditions on whether a particular method call would be successful. For external accounts, once a person has provided the correct private key, the person is allowed to call any of the predefined methods in an external account that facilitate ether transactions. For contracts, things become more complex because the code of all contracts is transparent and publicly available to everyone. What then, are the kind of protection mechanisms that a smart contract can deploy? As addresses of smart contracts are transparent and globally available, contracts \textit{cannot} prevent anybody from sending them messages, but they can dictate \textit{how} they respond to these messages.\\
 
-All this means is that from the receiver object's viewpoint, there must be a way for the receiver to know \textit{who} or what is the sender address of the message. The Ethereum platform facilitates sender authentication, such then when an external account or contract account calls a method on a contract account o$'$ by sending a message to o$'$, o$'$ as the receiver, can always see the address of the message sender, and can trust the address of the message sender to be authentic\footnote{Note that we are less concerned with how the architecture of the Ethereum platform guarantees the authenticity of who the message sender is, but more with higher-level protection strategies that smart contracts can employ knowing such a guarantee exists.}.\\
+All this means is that from the receiver object's viewpoint, there must be a way for the receiver to know \textit{who} or what is the sender address of the message. The Ethereum platform facilitates sender authentication, such that when an external account or contract account calls a method on a contract account o$'$ by sending a message to o$'$, o$'$ as the receiver, can always see the address of the message sender, and can trust the address of the message sender to be authentic\footnote{Note that we are less concerned with how the architecture of the Ethereum platform guarantees the authenticity of who the message sender is, but more with higher-level protection strategies that smart contracts can employ knowing such a guarantee exists.}.\\
 
 In other words, when Object A sends a message to Object B, Object A \textit{cannot} mask or hide its own address or pretend to be another Object in the message to B, and B can always guarantee that the designation of the sender is the true sender of the message. If the sender of the message is an address of an external account, we know that a person has authenticated using a private-key to be the external account's owner and fired off the transaction from the external account. If a sender of a message is a contract address, then we know the message is triggered from the contract (but that the origin of such a transaction has to be an external account).\\
 
-From the receiver viewpoint, Solidity allows a method call to succeed or fail based on function modifiers. Function modifiers represent conditions written by the programmer that can be attached to methods that determine whether calls on that method would succeed or fail. They provide more flexibility than the private-public access modifiers in most object-oriented languages. They differ from access modifiers in the sense that access modifiers restrict an object's method from being called by a caller, i.e. the method \textit{cannot be called}, while function modifiers in Solidity, they can be considered as \textit{part of the method execution}. In a smart contract, one can use the following code in Solidity to determine who exactly is the message sender:
+From the receiver's viewpoint, Solidity allows a method call to succeed or fail based on function modifiers. Function modifiers represent conditions written by the programmer that can be attached to methods that determine whether calls on that method would succeed or fail. They provide more flexibility than the private-public access modifiers in most object-oriented languages. They differ from access modifiers in the sense that access modifiers restrict an object's method from being called by a caller, i.e. the method \textit{cannot be called}, while function modifiers in Solidity, they can be considered as \textit{part of the method execution}. In a smart contract, one can use the following code in Solidity to determine who exactly is the message sender:
 \begin{itemize}
 \item \texttt{Msg.sender} gives the designation of the message sender
 \item \texttt{Tx.origin} allows stack introspection and gives the designation of the first sender(originator)
@@ -1209,11 +1320,13 @@ TestContract {
 \end{lstlisting}
 
 where we now know that while any object in Solidity can call \texttt{restrictedMeth()} in TestContract, the execution of the method will fail if the object caller's address is not the same as the owner of the contract.
-\subsection{Further Work}
-We note that our \sf{MayCall} predicate is inadequate to describe the protection mechanisms of smart contracts in Ethereum. This is because, on the Ethereum platform, the protection mechanism in a smart contract essentially happens \textit{during} the execution of a method in that object, i.e., that the receiver in the state of execution must have \textit{already} transitioned into that object, \textit{before} that object can protect itself. Through some condition specified in the method call (e.g. checking the identity of the message sender or other conditions), the method call will fail during execution, where the Ethereum virtual machine will, up till the 'point of failure', revert all state changes during the method execution, except the payment of the underlying 'gas' fees to execute the contract on the blockchain. Therefore, the platform on Ethereum requires stronger formal definitions of authority that does not merely mean a transition of the receiver from an object to another object---the stronger definition of authority needs to be able to describe the \textit{successful completion} of a method call.
+\section{Further Work}
+In \cref{sec:treereasoning}, we rely heavily on Hoare logics, especially when we were using policies on immutable properties to argue how certain properties of restricted nodes will not change  during code execution. Hence, we recognise that more work needs to be done to augment the Hoare triple to prove adherence to capability polices so that the logics can guarantee not only some properties to hold after execution of the code, \textbf{but also that these properties hold during execution of the code}.\\
+
+We further note that our \sf{MayCall} predicate is inadequate to describe the protection mechanisms of smart contracts in Ethereum. This is because, on the Ethereum platform, the protection mechanism in a smart contract essentially happens \textit{during} the execution of a method in that object, i.e., that the receiver in the state of execution must have \textit{already} transitioned into that object, \textit{before} that object can protect itself. Through some condition specified in the method call (e.g. checking the identity of the message sender or other conditions), the method call will fail during execution, where the Ethereum virtual machine will, up till the 'point of failure', revert all state changes during the method execution, except the payment of the underlying 'gas' fees to execute the contract on the blockchain. Therefore, the platform on Ethereum requires stronger formal definitions of authority that do not merely mean a transition of the receiver from an object to another object---the stronger definition of authority needs to be able to describe the \textit{successful completion} of a method call. Further work needs to be done in formal reasoning about risk and trust on blockchain platforms, given the meteoric rise of capital traded and number of smart contracts on blockchain technology.
 
 \section{Conclusion}
-To formally specify OCap patterns in the style of OCap policies, our paper contributes to the literature by proposing new formal definitions for permission and authority that describe access dynamics between objects. Using our formal definition, we have reasoned in a novel way about isolation, cooperation, vulnerability, and protection of objects in the face of trusted and untrusted code. Our paper has also provided an illustration of three OCap patterns and more specifically, the OCap policy specifications using our proposed methodology for the DOM Tree pattern.  Using our OCap policies in the DOM Tree pattern, we show how we can preserve properties of a system that interacts with code of unknown provenance. In the course of coming up with our OCap policies, we have also proposed the novel use of the concept of domination over objects. We have further demonstrated that it is challenging to reason about security properties of modern open systems like the Ethereum blockchain platform that does not adhere to an OCap system, and further work needs to be done in this area given the meteoric rise of capital traded and number of smart contracts on blockchain technology.
+To formally specify OCap patterns in the style of OCap policies, our paper contributes to the literature by proposing new formal definitions for permission and authority that describe access dynamics between objects. We have also proposed the novel use of the concept of domination over objects to reason about OCap policies. Using our formal definitions of these concepts, we have also reasoned in a novel way about isolation, cooperation, vulnerability, and protection of objects in the face of trusted and untrusted code. We have further provided an illustration of three OCap patterns and their policies using our methodology. By using the DOM Tree pattern, we have also showed how we can use our OCap policies to comfortably reason about which properties of a system can be preserved when interacting with code of unknown provenance. Lastly, we have further demonstrated that it is challenging to reason about security properties of modern open systems like the Ethereum blockchain platform that does not adhere to an OCap system.
 
 %----------------------------------------------------------------------------------------
 %	REFERENCE LIST
@@ -1224,45 +1337,57 @@ To formally specify OCap patterns in the style of OCap policies, our paper contr
 \bibliography{ref}
 \clearpage
 \section{Appendix}
-\subsection{Module Linking}\label{app:modulelinking}
-Here we show the definition of module linking found in the appendix of \cite{drossopoulou2015b}.\\
+\subsection{Definitions in Appendix of \cite{drossopoulou2015b}}
+\subsubsection{Execution}\label{app:execution}
+Here we show the definition of execution and the operational semantics found in the appendix of \cite{drossopoulou2015b}.\\
+\includegraphics[trim={0 5cm 0 5cm},width=0.5\textwidth]{figures/app_execution.pdf}\linebreak
+\includegraphics[trim={0 0 0 0cm},width=\textwidth]{figures/app_op.pdf}
+\clearpage
 
-\includegraphics[width=0.5\textwidth,valign=t]{figures/app_modlink1.pdf}\linebreak
+\subsubsection{Reach}\label{app:reach}
+Here we show the definition of execution and the operational semantics found in the appendix of \cite{drossopoulou2015b}.\\
+
+\includegraphics[trim={0 0 0 0},width=0.5\textwidth]{figures/app_reach.pdf}\linebreak
+\clearpage
+
+\subsubsection{Module Linking}\label{app:modulelinking}
+Here we show the definition of module linking found in the appendix of \cite{drossopoulou2015b}.\\
+\includegraphics[trim={0 5cm 0 5cm},width=0.5\textwidth,valign=t]{figures/app_modlink1.pdf}\linebreak
 \includegraphics[width=0.5\textwidth,valign=t]{figures/app_modlink2.pdf}
 \clearpage
-\subsection{Assertion}\label{app:assertion}
-Here we show the definition of assertion found in the appendix of \cite{drossopoulou2015b}.\\
 
+\subsubsection{Assertion}\label{app:assertion}
+Here we show the definition of assertion found in the appendix of \cite{drossopoulou2015b}.\\
 \includegraphics[width=0.5\textwidth,valign=t]{figures/app_assertion1.pdf}
 \includegraphics[width=0.5\textwidth,valign=t]{figures/app_assertion2.pdf}
 
 \subsection{Pony Code - DOM Tree}\label{sec:code_DOM}
 \begin{minipage}{\textwidth}
 \includegraphics[width=\textwidth,valign=t,page=1]{figures/code_DOM.pdf}
-\end{minipage}
+\end{minipage}\clearpage
 \begin{minipage}{\textwidth}
 \includegraphics[width=\textwidth,valign=t,page=2]{figures/code_DOM.pdf}
-\end{minipage}
+\end{minipage}\clearpage
 \subsection{Pony Code - Caretaker}\label{sec:code_Caretaker}
 \begin{minipage}{\textwidth}
 \includegraphics[width=\textwidth,valign=t,page=1]{figures/code_Caretaker.pdf}
-\end{minipage}
+\end{minipage}\clearpage
 \begin{minipage}{\textwidth}
 \includegraphics[width=\textwidth,valign=t,page=2]{figures/code_Caretaker.pdf}
-\end{minipage}
+\end{minipage}\clearpage
 \begin{minipage}{\textwidth}
 \includegraphics[width=\textwidth,valign=t,page=3]{figures/code_Caretaker.pdf}
-\end{minipage}
+\end{minipage}\clearpage
 \subsection{Pony Code - Membrane}\label{sec:code_Membrane}
 \begin{minipage}{\textwidth}
 \includegraphics[width=\textwidth,valign=t,page=1]{figures/code_Membrane.pdf}
-\end{minipage}
+\end{minipage}\clearpage
 \begin{minipage}{\textwidth}
 \includegraphics[width=\textwidth,valign=t,page=2]{figures/code_Membrane.pdf}
-\end{minipage}
+\end{minipage}\clearpage
 \begin{minipage}{\textwidth}
 \includegraphics[width=\textwidth,valign=t,page=3]{figures/code_Membrane.pdf}
-\end{minipage}
+\end{minipage}\clearpage
 
 %----------------------------------------------------------------------------------------
 
